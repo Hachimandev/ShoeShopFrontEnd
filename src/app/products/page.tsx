@@ -79,8 +79,8 @@ export default function ProductsPage() {
               >
                 <div className="bg-white rounded-3xl p-3 transition-all hover:shadow-xl border border-transparent hover:border-slate-100">
                   <div className="aspect-square overflow-hidden rounded-2xl bg-slate-100 relative mb-4">
-                    <Image
-                      alt={product.productName || product.name}
+                            <Image
+                        alt={product.productName || product.name}
                       className="object-cover transition-transform group-hover:scale-110 duration-500"
                       fill
                       src={product.image ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/images/${product.image}` : "/login_picture.jpg"}

@@ -1,6 +1,6 @@
 'use client';
 import Link from "next/link";
-import { ShoppingBag, User, LogOut, Settings } from "lucide-react";
+import { ShoppingBag, User, LogOut, Settings, ShoppingCart } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { 
@@ -12,10 +12,12 @@ import {
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 
 export function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState<{ username?: string; fullName?: string } | null>(null);
+  const [cartItemCount, setCartItemCount] = useState(0);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -45,10 +47,10 @@ export function Header() {
       </Link>
       <nav className="ml-auto flex gap-4 sm:gap-6 items-center">
         <Link
-          className="text-sm font-medium hover:underline underline-offset-4"
+          className="text-base font-bold hover:text-primary transition-colors underline-offset-4"
           href="/products"
         >
-          Collection
+          Product
         </Link>
         <Link
           className="text-sm font-medium hover:underline underline-offset-4"
@@ -62,6 +64,17 @@ export function Header() {
         >
           Sales
         </Link>
+
+        {/* Giỏ hàng */}
+        <Link href="/cart" className="relative group p-2">
+          <ShoppingCart className="h-6 w-6 group-hover:text-primary transition-colors" />
+          {cartItemCount > 0 && (
+            <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-[10px] font-bold">
+              {cartItemCount}
+            </Badge>
+          )}
+        </Link>
+
         {isLoggedIn ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
