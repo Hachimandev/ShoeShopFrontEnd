@@ -25,9 +25,15 @@ export interface CartSummary {
 }
 
 export interface OrderRequest {
-  customerId: string;
+  userInfo: {
+    fullName: string;
+    email: string;
+    phoneNumber: string;
+    address: string;
+    paymentMethod: "COD" | "CARD" | "EWALLET"; // Phải khớp với Enum Backend
+  };
   cart: Cart;
-  paymentMethod: PaymentMethod;
+  totalAmount: number;
 }
 
 export interface OrderResponseDTO {
@@ -37,20 +43,20 @@ export interface OrderResponseDTO {
 }
 
 export enum PaymentMethod {
-  CASH = 'CASH',
-  CREDIT_CARD = 'CREDIT_CARD',
-  PAYPAL = 'PAYPAL',
-  BANK_TRANSFER = 'BANK_TRANSFER'
+  CASH = "CASH",
+  CREDIT_CARD = "CREDIT_CARD",
+  PAYPAL = "PAYPAL",
+  BANK_TRANSFER = "BANK_TRANSFER",
 }
 
 export enum OrderStatus {
-  PENDING = 'PENDING',
-  CONFIRMED = 'CONFIRMED',
-  PROCESSING = 'PROCESSING',
-  SHIPPED = 'SHIPPED',
-  DELIVERED = 'DELIVERED',
-  CANCELLED = 'CANCELLED',
-  RETURNED = 'RETURNED'
+  PENDING = "PENDING",
+  CONFIRMED = "CONFIRMED",
+  PROCESSING = "PROCESSING",
+  SHIPPED = "SHIPPED",
+  DELIVERED = "DELIVERED",
+  CANCELLED = "CANCELLED",
+  RETURNED = "RETURNED",
 }
 
 export interface Order {

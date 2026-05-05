@@ -37,6 +37,12 @@ export function CheckoutForm({
       [field]: value,
     });
   };
+  const paymentLabels: Record<string, string> = {
+    [PaymentMethod.CASH]: "Thanh toán khi nhận hàng",
+    [PaymentMethod.CREDIT_CARD]: "Visa, Mastercard (Thẻ)",
+    [PaymentMethod.PAYPAL]: "PayPal (Ví điện tử)",
+    [PaymentMethod.BANK_TRANSFER]: "Chuyển khoản ngân hàng",
+  };
 
   return (
     <div className="space-y-8 bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
@@ -167,13 +173,7 @@ export function CheckoutForm({
               >
                 <p className="font-semibold">{method.replace("_", " ")}</p>
                 <p className="text-sm text-slate-500">
-                  {method === PaymentMethod.CASH
-                    ? "Thanh toán khi nhận hàng"
-                    : method === PaymentMethod.CREDIT_CARD
-                      ? "Visa, Mastercard"
-                      : method === PaymentMethod.PAYPAL
-                        ? "PayPal"
-                        : "Chuyển khoản ngân hàng"}
+                  {paymentLabels[method] || "Phương thức khác"}
                 </p>
               </button>
             ))}

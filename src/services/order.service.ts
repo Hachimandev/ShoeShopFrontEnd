@@ -11,23 +11,23 @@ import {
 export const orderService = {
   // Checkout và tạo order từ cart
   checkout: async (request: OrderRequest): Promise<OrderResponseDTO> => {
-    console.log("Order checkout request:", {
-      customerId: request.customerId,
-      paymentMethod: request.paymentMethod,
-      cartItemsCount: request.cart.items.length,
-      token: localStorage.getItem("token") ? "exists" : "missing",
+    // Log để kiểm tra dữ liệu trước khi gửi
+    console.log("Order checkout request payload:", {
+      fullName: request.userInfo?.fullName,
+      paymentMethod: request.userInfo?.paymentMethod, // Kiểm tra xem có bị null không
+      totalAmount: request.totalAmount,
+      cartItems: request.cart?.items?.length,
     });
 
     try {
+      // Gửi toàn bộ object request (đã bao gồm userInfo) lên server
       const response = await api.post("/orders/checkout", request);
-      console.log("Order checkout response:", response.data);
       return response.data;
     } catch (error: any) {
       console.error("Order checkout error details:", {
         status: error.response?.status,
-        statusText: error.response?.statusText,
-        data: error.response?.data,
         message: error.message,
+        serverDetail: error.response?.data, // Xem thông báo lỗi cụ thể từ Java
       });
       throw error;
     }
