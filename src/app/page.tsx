@@ -14,7 +14,7 @@ export default function Home() {
           <span>SHOESHOP</span>
         </Link>
         <nav className="ml-auto flex gap-4 sm:gap-6">
-          <Link className="text-sm font-medium hover:underline underline-offset-4" href="#">
+          <Link className="text-sm font-medium hover:underline underline-offset-4" href="/products">
             Collection
           </Link>
           <Link className="text-sm font-medium hover:underline underline-offset-4" href="#">
@@ -44,13 +44,17 @@ export default function Home() {
                   </p>
                 </div>
                 <div className="flex flex-col gap-3 min-[400px]:flex-row">
-                  <Button size="lg" className="px-10 h-14 text-lg">
-                    Shop Now
-                    <ChevronRight className="ml-2 h-5 w-5" />
-                  </Button>
-                  <Button size="lg" variant="outline" className="px-10 h-14 text-lg">
-                    View Catalog
-                  </Button>
+                  <Link href="/products">
+                    <Button size="lg" className="px-10 h-14 text-lg w-full">
+                      Shop Now
+                      <ChevronRight className="ml-2 h-5 w-5" />
+                    </Button>
+                  </Link>
+                  <Link href="/products">
+                    <Button size="lg" variant="outline" className="px-10 h-14 text-lg w-full">
+                      View Catalog
+                    </Button>
+                  </Link>
                 </div>
                 <div className="flex items-center gap-4 text-sm font-medium">
                   <div className="flex -space-x-2">
