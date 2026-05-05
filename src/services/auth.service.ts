@@ -15,6 +15,17 @@ export const authService = {
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("username", response.data.username);
       localStorage.setItem("roles", JSON.stringify(response.data.roles));
+      
+      // Tạo một object user giả lập tương ứng với logic Header đang dùng
+      const user = {
+        username: response.data.username,
+        fullName: response.data.username, // Có thể lấy fullName sau này qua API getCurrentUser
+        role: response.data.roles && response.data.roles.length > 0 ? response.data.roles[0] : "USER"
+      };
+      localStorage.setItem("user", JSON.stringify(user));
+
+      // Phát sự kiện để Header cập nhật ngay lập tức
+      window.dispatchEvent(new Event("auth-change"));
     }
     return response.data;
   },
@@ -28,6 +39,9 @@ export const authService = {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
     localStorage.removeItem("roles");
+    localStorage.removeItem("user");
+    // Phát sự kiện để Header cập nhật ngay lập tức
+    window.dispatchEvent(new Event("auth-change"));
   },
 
   getCurrentUser: async (username: string): Promise<UserInfo> => {

@@ -20,12 +20,28 @@ export function Header() {
   const [cartItemCount, setCartItemCount] = useState(0);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const storedUser = localStorage.getItem("user");
-    setIsLoggedIn(!!token);
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
+    const checkAuth = () => {
+      const token = localStorage.getItem("token");
+      const storedUser = localStorage.getItem("user");
+      setIsLoggedIn(!!token);
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      } else {
+        setUser(null);
+      }
+    };
+
+    checkAuth();
+
+    // Lắng nghe sự kiện storage để cập nhật khi localStorage thay đổi (ví dụ từ tab khác hoặc cùng tab)
+    window.addEventListener("storage", checkAuth);
+    // Lắng nghe sự kiện custom "auth-change" để cập nhật ngay lập tức trong cùng tab
+    window.addEventListener("auth-change", checkAuth);
+
+    return () => {
+      window.removeEventListener("storage", checkAuth);
+      window.removeEventListener("auth-change", checkAuth);
+    };
   }, []);
 
   const handleLogout = () => {
@@ -33,6 +49,7 @@ export function Header() {
     localStorage.removeItem("user");
     setIsLoggedIn(false);
     setUser(null);
+    window.dispatchEvent(new Event("auth-change"));
     window.location.href = "/";
   };
 
@@ -120,12 +137,11 @@ export function Header() {
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
-          <Link
-            className="text-sm font-medium hover:underline underline-offset-4"
-            href="/auth/login"
-          >
-            Login
-          </Link>
+          <Button asChild variant="default" className="rounded-full px-6 font-bold">
+            <Link href="/auth/login">
+              Login
+            </Link>
+          </Button>
         )}
       </nav>
     </header>
