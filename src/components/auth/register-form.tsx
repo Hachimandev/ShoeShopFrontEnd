@@ -1,3 +1,4 @@
+"use client";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -10,11 +11,15 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
-
-export function LoginForm({
+import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
+export function RegisterForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   return (
     <div
       className={cn("flex flex-col gap-4 max-w-5xl mx-auto w-full", className)}
@@ -26,12 +31,24 @@ export function LoginForm({
             <FieldGroup className="gap-4">
               <div className="flex flex-col items-center gap-2 text-center mb-1">
                 <h1 className="text-3xl font-bold tracking-tight">
-                  Welcome back
+                  Create account
                 </h1>
                 <p className="text-base text-balance text-muted-foreground">
-                  Login to your account
+                  Sign up for a new account
                 </p>
               </div>
+              <Field className="space-y-1">
+                <FieldLabel htmlFor="name" className="text-sm font-medium">
+                  Full Name
+                </FieldLabel>
+                <Input
+                  id="name"
+                  type="text"
+                  placeholder="John Doe"
+                  required
+                  className="h-10 text-sm"
+                />
+              </Field>
               <Field className="space-y-1">
                 <FieldLabel htmlFor="email" className="text-sm font-medium">
                   Email
@@ -45,30 +62,69 @@ export function LoginForm({
                 />
               </Field>
               <Field className="space-y-1">
-                <div className="flex items-center">
-                  <FieldLabel
-                    htmlFor="password"
-                    className="text-sm font-medium"
+                <FieldLabel htmlFor="password" className="text-sm font-medium">
+                  Password
+                </FieldLabel>
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    required
+                    className="h-10 text-sm pr-10"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
                   >
-                    Password
-                  </FieldLabel>
-                  <a
-                    href="#"
-                    className="ml-auto text-xs underline-offset-2 hover:underline font-medium"
-                  >
-                    Forgot your password?
-                  </a>
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </Button>
                 </div>
-                <Input
-                  id="password"
-                  type="password"
-                  required
-                  className="h-10 text-sm"
-                />
+              </Field>
+              <Field className="space-y-1">
+                <FieldLabel
+                  htmlFor="confirmPassword"
+                  className="text-sm font-medium"
+                >
+                  Confirm Password
+                </FieldLabel>
+                <div className="relative">
+                  <Input
+                    id="confirmPassword"
+                    type={showConfirmPassword ? "text" : "password"}
+                    required
+                    className="h-10 text-sm pr-10"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    aria-label={
+                      showConfirmPassword ? "Hide password" : "Show password"
+                    }
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
               </Field>
               <Field className="pt-1">
                 <Button type="submit" className="w-full h-10 text-base">
-                  Login
+                  Sign up
                 </Button>
               </Field>
               <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card py-2 text-xs font-medium">
@@ -82,7 +138,7 @@ export function LoginForm({
                       fill="currentColor"
                     />
                   </svg>
-                  <span className="sr-only">Login with Apple</span>
+                  <span className="sr-only">Sign up with Apple</span>
                 </Button>
                 <Button variant="outline" type="button" className="h-12">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -91,7 +147,7 @@ export function LoginForm({
                       fill="currentColor"
                     />
                   </svg>
-                  <span className="sr-only">Login with Google</span>
+                  <span className="sr-only">Sign up with Google</span>
                 </Button>
                 <Button variant="outline" type="button" className="h-12">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -100,16 +156,16 @@ export function LoginForm({
                       fill="currentColor"
                     />
                   </svg>
-                  <span className="sr-only">Login with Meta</span>
+                  <span className="sr-only">Sign up with Meta</span>
                 </Button>
               </Field>
               <FieldDescription className="text-center text-sm">
-                Don&apos;t have an account?{" "}
+                Already have an account?{" "}
                 <a
-                  href="/auth/register"
+                  href="/auth/login"
                   className="font-semibold underline underline-offset-4"
                 >
-                  Sign up
+                  Sign in
                 </a>
               </FieldDescription>
             </FieldGroup>
@@ -126,17 +182,6 @@ export function LoginForm({
           </div>
         </CardContent>
       </Card>
-      <FieldDescription className="px-6 text-center text-xs">
-        By clicking continue, you agree to our{" "}
-        <a href="#" className="underline underline-offset-4 font-medium">
-          Terms of Service
-        </a>{" "}
-        and{" "}
-        <a href="#" className="underline underline-offset-4 font-medium">
-          Privacy Policy
-        </a>
-        .
-      </FieldDescription>
     </div>
   );
 }
