@@ -13,12 +13,58 @@ import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import { authService } from "@/services/auth.service";
+import { useRouter } from "next/navigation";
+
 export function RegisterForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await authService.register({
+        username,
+        email,
+        password,
+        fullName,
+      });
+
+      if (response === "Registered") {
+        router.push("/auth/login");
+      } else {
+        setError(response);
+      }
+    } catch (err: unknown) {
+      if (err && typeof err === "object" && "response" in err) {
+        const response = (err as { response?: { data?: string } }).response;
+        setError(response?.data || "Registration failed. Please try again.");
+      } else {
+        setError("An error occurred. Please try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div
@@ -27,7 +73,7 @@ export function RegisterForm({
     >
       <Card className="overflow-hidden p-0 shadow-lg">
         <CardContent className="grid p-0 md:grid-cols-2">
-          <form className="p-6 md:p-8 space-y-4">
+          <form className="p-6 md:p-8 space-y-4" onSubmit={handleSubmit}>
             <FieldGroup className="gap-4">
               <div className="flex flex-col items-center gap-2 text-center mb-1">
                 <h1 className="text-3xl font-bold tracking-tight">
@@ -37,16 +83,33 @@ export function RegisterForm({
                   Sign up for a new account
                 </p>
               </div>
+              {error && <p className="text-red-500 text-sm text-center">{error}</p>}
               <Field className="space-y-1">
-                <FieldLabel htmlFor="name" className="text-sm font-medium">
+                <FieldLabel htmlFor="username" className="text-sm font-medium">
+                  Username
+                </FieldLabel>
+                <Input
+                  id="username"
+                  type="text"
+                  placeholder="johndoe"
+                  required
+                  className="h-10 text-sm"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+              </Field>
+              <Field className="space-y-1">
+                <FieldLabel htmlFor="fullName" className="text-sm font-medium">
                   Full Name
                 </FieldLabel>
                 <Input
-                  id="name"
+                  id="fullName"
                   type="text"
                   placeholder="John Doe"
                   required
                   className="h-10 text-sm"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
                 />
               </Field>
               <Field className="space-y-1">
@@ -59,6 +122,8 @@ export function RegisterForm({
                   placeholder="m@example.com"
                   required
                   className="h-10 text-sm"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </Field>
               <Field className="space-y-1">
@@ -71,6 +136,8 @@ export function RegisterForm({
                     type={showPassword ? "text" : "password"}
                     required
                     className="h-10 text-sm pr-10"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                   />
                   <Button
                     type="button"
@@ -103,6 +170,8 @@ export function RegisterForm({
                     type={showConfirmPassword ? "text" : "password"}
                     required
                     className="h-10 text-sm pr-10"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
                   />
                   <Button
                     type="button"
@@ -123,8 +192,8 @@ export function RegisterForm({
                 </div>
               </Field>
               <Field className="pt-1">
-                <Button type="submit" className="w-full h-10 text-base">
-                  Sign up
+                <Button type="submit" className="w-full h-10 text-base" disabled={loading}>
+                  {loading ? "Signing up..." : "Sign up"}
                 </Button>
               </Field>
               <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card py-2 text-xs font-medium">

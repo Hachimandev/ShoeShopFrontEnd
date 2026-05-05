@@ -1,34 +1,11 @@
 import Link from "next/link"
-import { ShoppingBag, ChevronRight, Star } from "lucide-react"
+import { ChevronRight, Star, ShoppingBag } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import Image from "next/image"
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* Navigation */}
-      <header className="px-4 lg:px-6 h-16 flex items-center border-b sticky top-0 bg-white/80 backdrop-blur-md z-50">
-        <Link className="flex items-center justify-center font-bold text-2xl tracking-tighter" href="/">
-          <ShoppingBag className="mr-2 h-6 w-6" />
-          <span>SHOESHOP</span>
-        </Link>
-        <nav className="ml-auto flex gap-4 sm:gap-6">
-          <Link className="text-sm font-medium hover:underline underline-offset-4" href="/products">
-            Collection
-          </Link>
-          <Link className="text-sm font-medium hover:underline underline-offset-4" href="#">
-            New Arrivals
-          </Link>
-          <Link className="text-sm font-medium hover:underline underline-offset-4" href="#">
-            Sales
-          </Link>
-          <Link className="text-sm font-medium hover:underline underline-offset-4" href="/auth/login">
-            Login
-          </Link>
-        </nav>
-      </header>
-
+    <>
       <main className="flex-1">
         {/* Hero Section */}
         <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-slate-50">
@@ -131,54 +108,7 @@ export default function Home() {
           </div>
         </section>
       </main>
-
-      <footer className="w-full py-12 bg-slate-900 text-slate-200">
-        <div className="container px-4 md:px-6 mx-auto">
-          <div className="grid gap-12 lg:grid-cols-4">
-            <div className="space-y-4">
-              <Link className="flex items-center font-bold text-2xl tracking-tighter text-white" href="/">
-                <ShoppingBag className="mr-2 h-6 w-6" />
-                <span>SHOESHOP</span>
-              </Link>
-              <p className="text-sm text-slate-400">
-                Premium quality footwear for those who demand excellence in every step. 
-              </p>
-            </div>
-            <div>
-              <h4 className="font-bold mb-4 text-white">Shop</h4>
-              <ul className="space-y-2 text-sm text-slate-400">
-                <li><Link href="#">All Collection</Link></li>
-                <li><Link href="#">New Arrivals</Link></li>
-                <li><Link href="#">Sale</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-bold mb-4 text-white">Support</h4>
-              <ul className="space-y-2 text-sm text-slate-400">
-                <li><Link href="#">Shipping</Link></li>
-                <li><Link href="#">Returns</Link></li>
-                <li><Link href="#">Contact Us</Link></li>
-              </ul>
-            </div>
-            <div className="space-y-4">
-              <h4 className="font-bold text-white">Stay Updated</h4>
-              <p className="text-sm text-slate-400">Subscribe for exclusive offers.</p>
-              <div className="flex gap-2">
-                <Input placeholder="Email" className="bg-slate-800 border-slate-700 text-white" />
-                <Button size="sm">Go</Button>
-              </div>
-            </div>
-          </div>
-          <div className="mt-12 pt-8 border-t border-slate-800 flex flex-col sm:flex-row justify-between items-center gap-4">
-            <p className="text-xs text-slate-500">© 2026 SHOESHOP Inc. All rights reserved.</p>
-            <div className="flex gap-6 text-xs text-slate-500">
-              <Link href="#">Privacy Policy</Link>
-              <Link href="#">Terms of Service</Link>
-            </div>
-          </div>
-        </div>
-      </footer>
-    </div>
+    </>
   )
 }
 
