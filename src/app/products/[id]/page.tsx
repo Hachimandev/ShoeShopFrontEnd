@@ -30,19 +30,6 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
 
   return (
     <div className="flex flex-col min-h-screen bg-white">
-      {/* Navigation */}
-      <header className="px-4 lg:px-6 h-16 flex items-center border-b sticky top-0 bg-white/80 backdrop-blur-md z-50">
-        <Link className="flex items-center justify-center font-bold text-2xl tracking-tighter" href="/">
-          <ShoppingBag className="mr-2 h-6 w-6" />
-          <span>SHOESHOP</span>
-        </Link>
-        <nav className="ml-auto hidden md:flex gap-6">
-          <Link className="text-sm font-bold border-b-2 border-primary" href="/products">Collection</Link>
-          <Link className="text-sm font-medium hover:text-primary transition-colors" href="#">New Arrivals</Link>
-          <Link className="text-sm font-medium hover:text-primary transition-colors" href="#">Sales</Link>
-        </nav>
-      </header>
-
       <main className="flex-1 container px-4 py-8 mx-auto max-w-7xl">
         <div className="flex items-center justify-between mb-8">
             <Link href="/products" className="inline-flex items-center text-sm font-bold text-muted-foreground hover:text-primary transition-colors">

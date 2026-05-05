@@ -1,21 +1,36 @@
 'use client';
 import Link from "next/link";
-import { ShoppingBag, User } from "lucide-react";
+import { ShoppingBag, User, LogOut, Settings } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuLabel, 
+  DropdownMenuSeparator, 
+  DropdownMenuTrigger 
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState<{ username?: string; fullName?: string } | null>(null);
 
   useEffect(() => {
-    // Check if token exists in localStorage
     const token = localStorage.getItem("token");
+    const storedUser = localStorage.getItem("user");
     setIsLoggedIn(!!token);
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    setIsLoggedIn(false);
+    setUser(null);
     window.location.href = "/";
   };
 
@@ -48,14 +63,49 @@ export function Header() {
           Sales
         </Link>
         {isLoggedIn ? (
-          <div className="flex items-center gap-4">
-            <Link href="/profile" className="text-muted-foreground hover:text-primary">
-              <User className="h-5 w-5" />
-            </Link>
-            <Button variant="ghost" size="sm" onClick={handleLogout}>
-              Logout
-            </Button>
-          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                <Avatar className="h-10 w-10">
+                  <AvatarImage src="" alt={user?.username || "User"} />
+                  <AvatarFallback className="bg-primary text-primary-foreground">
+                    {(user?.fullName || user?.username || "U").substring(0, 1).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56" align="end" forceMount>
+              <DropdownMenuLabel className="font-normal">
+                <div className="flex flex-col space-y-1">
+                  <p className="text-sm font-medium leading-none">{user?.fullName || user?.username}</p>
+                  <p className="text-xs leading-none text-muted-foreground">
+                    @{user?.username}
+                  </p>
+                </div>
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link href="/profile" className="cursor-pointer w-full flex items-center">
+                  <User className="mr-2 h-4 w-4" />
+                  <span>Profile</span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/settings" className="cursor-pointer w-full flex items-center">
+                  <Settings className="mr-2 h-4 w-4" />
+                  <span>Settings</span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem 
+                className="text-red-600 cursor-pointer focus:text-red-600" 
+                onClick={handleLogout}
+              >
+                <LogOut className="mr-2 h-4 w-4" />
+                <span>Log out</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         ) : (
           <Link
             className="text-sm font-medium hover:underline underline-offset-4"
@@ -68,4 +118,5 @@ export function Header() {
     </header>
   );
 }
+
 
