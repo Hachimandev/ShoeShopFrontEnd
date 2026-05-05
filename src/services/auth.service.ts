@@ -1,11 +1,11 @@
 import api from "@/lib/api";
-import { 
-  AuthRequest, 
-  AuthResponse, 
-  ChangePasswordRequest, 
+import {
+  AuthRequest,
+  AuthResponse,
+  ChangePasswordRequest,
   RegisterRequest,
   UpdateAccountRequest,
-  UserInfo 
+  UserInfo,
 } from "@/types/auth";
 
 export const authService = {
@@ -15,12 +15,15 @@ export const authService = {
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("username", response.data.username);
       localStorage.setItem("roles", JSON.stringify(response.data.roles));
-      
+
       // Tạo một object user giả lập tương ứng với logic Header đang dùng
       const user = {
         username: response.data.username,
         fullName: response.data.username, // Có thể lấy fullName sau này qua API getCurrentUser
-        role: response.data.roles && response.data.roles.length > 0 ? response.data.roles[0] : "USER"
+        role:
+          response.data.roles && response.data.roles.length > 0
+            ? response.data.roles[0]
+            : "USER",
       };
       localStorage.setItem("user", JSON.stringify(user));
 
@@ -49,13 +52,25 @@ export const authService = {
     return response.data;
   },
 
-  updateAccount: async (username: string, data: UpdateAccountRequest): Promise<UserInfo> => {
-    const response = await api.put<UserInfo>(`/accounts/update/${username}`, data);
+  updateAccount: async (
+    username: string,
+    data: UpdateAccountRequest,
+  ): Promise<UserInfo> => {
+    const response = await api.put<UserInfo>(
+      `/accounts/update/${username}`,
+      data,
+    );
     return response.data;
   },
 
-  changePassword: async (username: string, data: ChangePasswordRequest): Promise<{ message: string }> => {
-    const response = await api.put<{ message: string }>(`/accounts/change-password/${username}`, data);
+  changePassword: async (
+    username: string,
+    data: ChangePasswordRequest,
+  ): Promise<{ message: string }> => {
+    const response = await api.put<{ message: string }>(
+      `/accounts/change-password/${username}`,
+      data,
+    );
     return response.data;
   },
 };

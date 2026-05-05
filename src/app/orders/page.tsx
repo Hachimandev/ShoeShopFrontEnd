@@ -1,47 +1,47 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { useOrder } from "@/hooks/useOrder"
-import { Order } from "@/types/order"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import Link from "next/link"
-import { ChevronLeft, Package, Calendar, CreditCard } from "lucide-react"
+import { useEffect, useState } from "react";
+import { useOrder } from "@/hooks/useOrder";
+import { Order } from "@/types/order";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { ChevronLeft, Package, Calendar, CreditCard } from "lucide-react";
 
 export default function OrdersPage() {
-  const { getAllOrders, loading, error } = useOrder()
-  const [orders, setOrders] = useState<Order[]>([])
+  const { getAllOrders, loading, error } = useOrder();
+  const [orders, setOrders] = useState<Order[]>([]);
 
   useEffect(() => {
     const fetchOrders = async () => {
-      const result = await getAllOrders()
+      const result = await getAllOrders();
       if (result) {
-        setOrders(result)
+        setOrders(result);
       }
-    }
+    };
 
-    fetchOrders()
-  }, [getAllOrders])
+    fetchOrders();
+  }, [getAllOrders]);
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'PENDING':
-        return 'bg-yellow-100 text-yellow-800'
-      case 'CONFIRMED':
-        return 'bg-blue-100 text-blue-800'
-      case 'PROCESSING':
-        return 'bg-purple-100 text-purple-800'
-      case 'SHIPPED':
-        return 'bg-indigo-100 text-indigo-800'
-      case 'DELIVERED':
-        return 'bg-green-100 text-green-800'
-      case 'CANCELLED':
-        return 'bg-red-100 text-red-800'
+      case "PENDING":
+        return "bg-yellow-100 text-yellow-800";
+      case "CONFIRMED":
+        return "bg-blue-100 text-blue-800";
+      case "PROCESSING":
+        return "bg-purple-100 text-purple-800";
+      case "SHIPPED":
+        return "bg-indigo-100 text-indigo-800";
+      case "DELIVERED":
+        return "bg-green-100 text-green-800";
+      case "CANCELLED":
+        return "bg-red-100 text-red-800";
       default:
-        return 'bg-gray-100 text-gray-800'
+        return "bg-gray-100 text-gray-800";
     }
-  }
+  };
 
   if (loading) {
     return (
@@ -55,7 +55,7 @@ export default function OrdersPage() {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   if (error) {
@@ -72,7 +72,7 @@ export default function OrdersPage() {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -96,8 +96,12 @@ export default function OrdersPage() {
           <Card>
             <CardContent className="flex flex-col items-center justify-center py-12">
               <Package className="h-16 w-16 text-gray-400 mb-4" />
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">No orders yet</h3>
-              <p className="text-gray-600 mb-6">You haven't placed any orders yet.</p>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                No orders yet
+              </h3>
+              <p className="text-gray-600 mb-6">
+                You havent placed any orders yet.
+              </p>
               <Link href="/products">
                 <Button>Start Shopping</Button>
               </Link>
@@ -106,13 +110,18 @@ export default function OrdersPage() {
         ) : (
           <div className="space-y-6">
             {orders.map((order) => (
-              <Card key={order.orderId} className="hover:shadow-md transition-shadow">
+              <Card
+                key={order.orderId}
+                className="hover:shadow-md transition-shadow"
+              >
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                       <Package className="h-6 w-6 text-gray-400" />
                       <div>
-                        <CardTitle className="text-lg">Order #{order.orderId}</CardTitle>
+                        <CardTitle className="text-lg">
+                          Order #{order.orderId}
+                        </CardTitle>
                         <div className="flex items-center gap-4 mt-1 text-sm text-gray-600">
                           <div className="flex items-center gap-1">
                             <Calendar className="h-4 w-4" />
@@ -151,5 +160,5 @@ export default function OrdersPage() {
         )}
       </div>
     </div>
-  )
+  );
 }

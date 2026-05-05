@@ -5,14 +5,32 @@ import {
   Order,
   Cart,
   CartSummary,
-  OrderStatus
+  OrderStatus,
 } from "@/types/order";
 
 export const orderService = {
   // Checkout và tạo order từ cart
   checkout: async (request: OrderRequest): Promise<OrderResponseDTO> => {
-    const response = await api.post("/orders/checkout", request);
-    return response.data;
+    console.log("Order checkout request:", {
+      customerId: request.customerId,
+      paymentMethod: request.paymentMethod,
+      cartItemsCount: request.cart.items.length,
+      token: localStorage.getItem("token") ? "exists" : "missing",
+    });
+
+    try {
+      const response = await api.post("/orders/checkout", request);
+      console.log("Order checkout response:", response.data);
+      return response.data;
+    } catch (error: any) {
+      console.error("Order checkout error details:", {
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        data: error.response?.data,
+        message: error.message,
+      });
+      throw error;
+    }
   },
 
   // Lấy tất cả orders
@@ -28,17 +46,24 @@ export const orderService = {
   },
 
   // Cập nhật trạng thái order
-  updateOrderStatus: async (id: string, status: OrderStatus): Promise<Order> => {
+  updateOrderStatus: async (
+    id: string,
+    status: OrderStatus,
+  ): Promise<Order> => {
     const response = await api.put(`/orders/${id}/status`, null, {
-      params: { status }
+      params: { status },
     });
     return response.data;
   },
 
   // Hủy order
-  cancelOrder: async (id: string, customerId: string, approve: boolean): Promise<Order> => {
+  cancelOrder: async (
+    id: string,
+    customerId: string,
+    approve: boolean,
+  ): Promise<Order> => {
     const response = await api.post(`/orders/${id}/cancel`, null, {
-      params: { customerId, approve }
+      params: { customerId, approve },
     });
     return response.data;
   },
@@ -70,8 +95,8 @@ export const orderService = {
   // Export to Excel
   exportToExcel: async (): Promise<Blob> => {
     const response = await api.get("/orders/export", {
-      responseType: 'blob'
+      responseType: "blob",
     });
     return response.data;
-  }
+  },
 };

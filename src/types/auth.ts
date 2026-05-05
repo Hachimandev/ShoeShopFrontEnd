@@ -6,6 +6,7 @@ export interface AuthRequest {
 export interface AuthResponse {
   token: string;
   username: string;
+  accountId: string;
   roles: string[];
 }
 
