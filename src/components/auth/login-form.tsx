@@ -16,47 +16,47 @@ export function LoginForm({
   ...props
 }: React.ComponentProps<"div">) {
   return (
-    <div className={cn("flex flex-col gap-8 max-w-4xl mx-auto w-full", className)} {...props}>
+    <div className={cn("flex flex-col gap-4 max-w-5xl mx-auto w-full", className)} {...props}>
       <Card className="overflow-hidden p-0 shadow-lg">
         <CardContent className="grid p-0 md:grid-cols-2">
-          <form className="p-8 md:p-12 space-y-6">
-            <FieldGroup className="gap-6">
-              <div className="flex flex-col items-center gap-4 text-center mb-2">
-                <h1 className="text-4xl font-bold tracking-tight">Welcome back</h1>
-                <p className="text-lg text-balance text-muted-foreground">
+          <form className="p-6 md:p-8 space-y-4">
+            <FieldGroup className="gap-4">
+              <div className="flex flex-col items-center gap-2 text-center mb-1">
+                <h1 className="text-3xl font-bold tracking-tight">Welcome back</h1>
+                <p className="text-base text-balance text-muted-foreground">
                   Login to your account
                 </p>
               </div>
-              <Field className="space-y-2">
-                <FieldLabel htmlFor="email" className="text-base font-medium">Email</FieldLabel>
+              <Field className="space-y-1">
+                <FieldLabel htmlFor="email" className="text-sm font-medium">Email</FieldLabel>
                 <Input
                   id="email"
                   type="email"
                   placeholder="m@example.com"
                   required
-                  className="h-12 text-base"
+                  className="h-10 text-sm"
                 />
               </Field>
-              <Field className="space-y-2">
+              <Field className="space-y-1">
                 <div className="flex items-center">
-                  <FieldLabel htmlFor="password" className="text-base font-medium">Password</FieldLabel>
+                  <FieldLabel htmlFor="password" className="text-sm font-medium">Password</FieldLabel>
                   <a
                     href="#"
-                    className="ml-auto text-sm underline-offset-2 hover:underline font-medium"
+                    className="ml-auto text-xs underline-offset-2 hover:underline font-medium"
                   >
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" type="password" required className="h-12 text-base" />
+                <Input id="password" type="password" required className="h-10 text-sm" />
               </Field>
-              <Field className="pt-2">
-                <Button type="submit" className="w-full h-12 text-lg">Login</Button>
+              <Field className="pt-1">
+                <Button type="submit" className="w-full h-10 text-base">Login</Button>
               </Field>
-              <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card py-4 text-sm font-medium">
+              <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card py-2 text-xs font-medium">
                 Or continue with
               </FieldSeparator>
-              <Field className="grid grid-cols-3 gap-4">
-                <Button variant="outline" type="button" className="h-12">
+              <Field className="grid grid-cols-3 gap-3">
+                <Button variant="outline" type="button" className="h-10">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <path
                       d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"
@@ -84,7 +84,7 @@ export function LoginForm({
                   <span className="sr-only">Login with Meta</span>
                 </Button>
               </Field>
-              <FieldDescription className="text-center text-base">
+              <FieldDescription className="text-center text-sm">
                 Don&apos;t have an account? <a href="#" className="font-semibold underline underline-offset-4">Sign up</a>
               </FieldDescription>
             </FieldGroup>
@@ -101,7 +101,7 @@ export function LoginForm({
           </div>
         </CardContent>
       </Card>
-      <FieldDescription className="px-6 text-center text-base">
+      <FieldDescription className="px-6 text-center text-xs">
         By clicking continue, you agree to our <a href="#" className="underline underline-offset-4 font-medium">Terms of Service</a>{" "}
         and <a href="#" className="underline underline-offset-4 font-medium">Privacy Policy</a>.
       </FieldDescription>
