@@ -80,10 +80,10 @@ export default function ProductsPage() {
                 <div className="bg-white rounded-3xl p-3 transition-all hover:shadow-xl border border-transparent hover:border-slate-100">
                   <div className="aspect-square overflow-hidden rounded-2xl bg-slate-100 relative mb-4">
                             <Image
-                        alt={product.productName || product.name}
+                        alt={product.productName}
                       className="object-cover transition-transform group-hover:scale-110 duration-500"
                       fill
-                      src={product.image ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/images/${product.image}` : "/login_picture.jpg"}
+                      src={product.image || "/login_picture.jpg"}
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
                         target.src = "/login_picture.jpg";

@@ -96,7 +96,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                 alt={product.productName || product.name || ""}
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
                 fill
-                src={product.image ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/images/${product.image}` : "/login_picture.jpg"}
+                src={product.image || "/login_picture.jpg"}
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
                   target.src = "/login_picture.jpg";
