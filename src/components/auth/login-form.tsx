@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -14,6 +14,7 @@ import { useState } from "react";
 import { authService } from "@/services/auth.service";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { Eye, EyeOff } from "lucide-react";
 
 export function LoginForm({
   className,
@@ -23,6 +24,7 @@ export function LoginForm({
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -33,9 +35,11 @@ export function LoginForm({
       await authService.login({ username, password });
       router.push("/"); // Chuyển hướng sau khi đăng nhập thành công
     } catch (err: unknown) {
-      if (err && typeof err === 'object' && 'response' in err) {
+      if (err && typeof err === "object" && "response" in err) {
         const response = (err as { response?: { data?: string } }).response;
-        setError(response?.data || "Đăng nhập thất bại. Vui lòng kiểm tra lại.");
+        setError(
+          response?.data || "Đăng nhập thất bại. Vui lòng kiểm tra lại.",
+        );
       } else {
         setError("Có lỗi xảy ra. Vui lòng thử lại.");
       }
@@ -61,7 +65,9 @@ export function LoginForm({
                   Login to your account
                 </p>
               </div>
-              {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+              {error && (
+                <p className="text-red-500 text-sm text-center">{error}</p>
+              )}
               <Field className="space-y-1">
                 <FieldLabel htmlFor="username" className="text-sm font-medium">
                   Username
@@ -91,17 +97,39 @@ export function LoginForm({
                     Forgot your password?
                   </a>
                 </div>
-                <Input
-                  id="password"
-                  type="password"
-                  required
-                  className="h-10 text-sm"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    required
+                    className="h-10 text-sm pr-10"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
               </Field>
               <Field className="pt-1">
-                <Button type="submit" className="w-full h-10 text-base" disabled={loading}>
+                <Button
+                  type="submit"
+                  className="w-full h-10 text-base"
+                  disabled={loading}
+                >
                   {loading ? "Processing..." : "Login"}
                 </Button>
               </Field>
