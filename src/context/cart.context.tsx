@@ -3,6 +3,8 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { CartItem, Cart } from "@/types/cart";
 import { Product } from "@/types/product";
+import { CartItemDTO, Cart as BackendCart, OrderRequest, PaymentMethod } from "@/types/order";
+import { useOrder } from "@/hooks/useOrder";
 
 interface CartContextType {
   cart: Cart;
@@ -15,6 +17,10 @@ interface CartContextType {
   removeFromCart: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
+  convertToBackendCart: () => BackendCart;
+  checkout: (customerId: string, paymentMethod: PaymentMethod) => Promise<any>;
+  checkoutLoading: boolean;
+  checkoutError: string | null;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -25,6 +31,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     totalItems: 0,
     totalPrice: 0,
   });
+  const { checkout: orderCheckout, loading: checkoutLoading, error: checkoutError, clearError } = useOrder();
 
   // Load cart from localStorage on mount
   useEffect(() => {
@@ -133,9 +140,56 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
+  const convertToBackendCart = (): BackendCart => {
+    const backendItems: CartItemDTO[] = cart.items.map((item) => ({
+      productDetailId: `${item.product.id || item.product.productId}-${item.size}-${item.color}`,
+      quantity: item.quantity,
+      productName: item.product.name || item.product.productName || "Unknown Product",
+      price: item.price,
+      size: item.size,
+      color: item.color,
+      stockQuantity: item.product.stock || 0,
+      image: item.product.image,
+    }));
+
+    return {
+      items: backendItems,
+      promotionId: undefined, // Có thể thêm logic promotion sau
+      usedPoints: 0, // Có thể thêm logic points sau
+    };
+  };
+
+  const checkout = async (customerId: string, paymentMethod: PaymentMethod) => {
+    clearError();
+    const backendCart = convertToBackendCart();
+
+    const orderRequest: OrderRequest = {
+      customerId,
+      cart: backendCart,
+      paymentMethod,
+    };
+
+    const result = await orderCheckout(orderRequest);
+    if (result) {
+      // Clear cart after successful checkout
+      clearCart();
+    }
+    return result;
+  };
+
   return (
     <CartContext.Provider
-      value={{ cart, addToCart, removeFromCart, updateQuantity, clearCart }}
+      value={{
+        cart,
+        addToCart,
+        removeFromCart,
+        updateQuantity,
+        clearCart,
+        convertToBackendCart,
+        checkout,
+        checkoutLoading,
+        checkoutError
+      }}
     >
       {children}
     </CartContext.Provider>
