@@ -51,7 +51,7 @@ export function useCustomer(): UseCustomerReturn {
     setError(null);
     try {
       return await customerService.getLoyaltyPoints(username);
-    } catch (err: any) {
+    } catch (err) {
       return handleError(err);
     } finally {
       setLoading(false);
@@ -63,7 +63,7 @@ export function useCustomer(): UseCustomerReturn {
     setError(null);
     try {
       return await customerService.getCustomer(username);
-    } catch (err: any) {
+    } catch (err) {
       return handleError(err);
     } finally {
       setLoading(false);
@@ -75,7 +75,7 @@ export function useCustomer(): UseCustomerReturn {
     setError(null);
     try {
       return await customerService.getCustomerInfo(username);
-    } catch (err: any) {
+    } catch (err) {
       return handleError(err);
     } finally {
       setLoading(false);
@@ -88,7 +88,7 @@ export function useCustomer(): UseCustomerReturn {
       setError(null);
       try {
         return await customerService.updateCustomerInfo(username, dto);
-      } catch (err: any) {
+      } catch (err) {
         return handleError(err);
       } finally {
         setLoading(false);
@@ -102,7 +102,7 @@ export function useCustomer(): UseCustomerReturn {
     setError(null);
     try {
       return await customerService.getAllCustomers();
-    } catch (err: any) {
+    } catch (err) {
       return handleError(err);
     } finally {
       setLoading(false);
@@ -114,7 +114,7 @@ export function useCustomer(): UseCustomerReturn {
     setError(null);
     try {
       return await customerService.searchCustomers(params);
-    } catch (err: any) {
+    } catch (err) {
       return handleError(err);
     } finally {
       setLoading(false);
@@ -126,7 +126,7 @@ export function useCustomer(): UseCustomerReturn {
     setError(null);
     try {
       return await customerService.getNewCustomersThisMonth();
-    } catch (err: any) {
+    } catch (err) {
       return handleError(err);
     } finally {
       setLoading(false);
@@ -138,7 +138,7 @@ export function useCustomer(): UseCustomerReturn {
     setError(null);
     try {
       return await customerService.getTotalCustomerCount();
-    } catch (err: any) {
+    } catch (err) {
       return handleError(err);
     } finally {
       setLoading(false);
@@ -150,7 +150,7 @@ export function useCustomer(): UseCustomerReturn {
     setError(null);
     try {
       return await customerService.exportCustomersToExcel();
-    } catch (err: any) {
+    } catch (err) {
       return handleError(err);
     } finally {
       setLoading(false);

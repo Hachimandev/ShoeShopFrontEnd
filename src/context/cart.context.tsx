@@ -3,7 +3,12 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { CartItem, Cart } from "@/types/cart";
 import { Product } from "@/types/product";
-import { CartItemDTO, Cart as BackendCart, OrderRequest, PaymentMethod } from "@/types/order";
+import {
+  CartItemDTO,
+  Cart as BackendCart,
+  OrderRequest,
+  PaymentMethod,
+} from "@/types/order";
 import { useOrder } from "@/hooks/useOrder";
 
 interface CartContextType {
@@ -31,7 +36,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     totalItems: 0,
     totalPrice: 0,
   });
-  const { checkout: orderCheckout, loading: checkoutLoading, error: checkoutError, clearError } = useOrder();
+  const {
+    checkout: orderCheckout,
+    loading: checkoutLoading,
+    error: checkoutError,
+    clearError,
+  } = useOrder();
 
   // Load cart from localStorage on mount
   useEffect(() => {
@@ -144,7 +154,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     const backendItems: CartItemDTO[] = cart.items.map((item) => ({
       productDetailId: `${item.product.id || item.product.productId}-${item.size}-${item.color}`,
       quantity: item.quantity,
-      productName: item.product.name || item.product.productName || "Unknown Product",
+      productName:
+        item.product.name || item.product.productName || "Unknown Product",
       price: item.price,
       size: item.size,
       color: item.color,
@@ -188,7 +199,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         convertToBackendCart,
         checkout,
         checkoutLoading,
-        checkoutError
+        checkoutError,
       }}
     >
       {children}
