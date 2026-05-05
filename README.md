@@ -1,16 +1,80 @@
-# React + Vite
+# ShoeShop Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is a frontend application for a shoe shop built with Next.js, React, and TailwindCSS.
 
-Currently, two official plugins are available:
+## Prerequisites
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Before you begin, ensure you have the following installed on your system:
 
-## React Compiler
+- **Node.js** (v16 or higher)
+- **pnpm** (v8 or higher)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Getting Started
 
-## Expanding the ESLint configuration
+Follow these steps to set up and run the project locally:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### 1. Clone the Repository
+
+```bash
+git clone <repository-url>
+cd shoeshop-frontend
+```
+
+### 2. Install Dependencies
+
+Use `pnpm` to install the required dependencies:
+
+```bash
+pnpm install
+```
+
+### 3. Run the Development Server
+
+Start the development server with the following command:
+
+```bash
+pnpm dev
+```
+
+The application will be available at `http://localhost:3000`.
+
+### 4. Build for Production
+
+To create an optimized production build, run:
+
+```bash
+pnpm build
+```
+
+### 5. Start the Production Server
+
+After building the project, you can start the production server with:
+
+```bash
+pnpm start
+```
+
+The production server will be available at `http://localhost:3000`.
+
+## Additional Scripts
+
+- **Linting**: Run ESLint to check for code quality issues:
+
+  ```bash
+  pnpm lint
+  ```
+
+## Project Structure
+
+- `src/`: Contains the source code of the application.
+- `public/`: Contains static assets such as images.
+
+## Technologies Used
+
+- **Next.js**: Framework for server-rendered React applications.
+- **React**: JavaScript library for building user interfaces.
+- **TailwindCSS**: Utility-first CSS framework.
+
+## License
+
+This project is licensed under the MIT License.
