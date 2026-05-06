@@ -28,7 +28,7 @@ const emptyCustomerInfo: CustomerDTO = {
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { cart, clearCart } = useCart();
+  const { cart, clearCart, convertToBackendCart } = useCart();
   const {
     getCustomer,
     getCustomerInfo,
@@ -165,7 +165,7 @@ export default function CheckoutPage() {
 
       // 5. Chuyển đổi Enum Frontend sang Enum Backend (QUAN TRỌNG)
       // Dựa trên Enum bạn đã cung cấp: COD, CARD, EWALLET
-      let backendPaymentMethod = "COD";
+      let backendPaymentMethod: "COD" | "CARD" | "EWALLET" = "COD";
       if (paymentMethod === PaymentMethod.CREDIT_CARD) {
         backendPaymentMethod = "CARD";
       } else if (
@@ -186,7 +186,7 @@ export default function CheckoutPage() {
           address: fullAddress,
           paymentMethod: backendPaymentMethod, // "COD" | "CARD" | "EWALLET"
         },
-        cart: cart, // Gửi toàn bộ đối tượng cart
+        cart: convertToBackendCart(), // Chuyển đổi giỏ hàng sang cấu trúc Backend yêu cầu
         totalAmount: total, // Tổng tiền sau thuế và phí[cite: 3]
       };
 

@@ -48,21 +48,29 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     const savedCart = localStorage.getItem("cart");
     if (savedCart) {
       try {
-        setCart(JSON.parse(savedCart));
+        const parsed = JSON.parse(savedCart);
+        if (parsed && Array.isArray(parsed.items)) {
+          setCart(parsed);
+        } else {
+          setCart({ items: [], totalItems: 0, totalPrice: 0 });
+        }
       } catch (error) {
         console.error("Failed to load cart from localStorage:", error);
+        setCart({ items: [], totalItems: 0, totalPrice: 0 });
       }
     }
   }, []);
 
   // Save cart to localStorage whenever it changes
   useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cart));
+    if (cart) {
+      localStorage.setItem("cart", JSON.stringify(cart));
+    }
   }, [cart]);
 
   const calculateTotals = (items: CartItem[]) => {
-    const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
-    const totalPrice = items.reduce(
+    const totalItems = (items || []).reduce((sum, item) => sum + item.quantity, 0);
+    const totalPrice = (items || []).reduce(
       (sum, item) => sum + item.price * item.quantity,
       0,
     );
@@ -76,7 +84,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     color: string,
   ) => {
     setCart((prevCart) => {
-      const existingItem = prevCart.items.find(
+      const currentItems = prevCart?.items || [];
+      const existingItem = currentItems.find(
         (item) =>
           (item.product.id || item.product.productId) ===
             (product.id || product.productId) &&
@@ -86,7 +95,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
       let newItems: CartItem[];
       if (existingItem) {
-        newItems = prevCart.items.map((item) =>
+        newItems = currentItems.map((item) =>
           item.id === existingItem.id
             ? { ...item, quantity: item.quantity + quantity }
             : item,
@@ -100,7 +109,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           color,
           price: product.price,
         };
-        newItems = [...prevCart.items, newItem];
+        newItems = [...currentItems, newItem];
       }
 
       const { totalItems, totalPrice } = calculateTotals(newItems);
@@ -114,7 +123,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const removeFromCart = (id: string) => {
     setCart((prevCart) => {
-      const newItems = prevCart.items.filter((item) => item.id !== id);
+      const currentItems = prevCart?.items || [];
+      const newItems = currentItems.filter((item) => item.id !== id);
       const { totalItems, totalPrice } = calculateTotals(newItems);
       return {
         items: newItems,
@@ -126,10 +136,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const updateQuantity = (id: string, quantity: number) => {
     setCart((prevCart) => {
+      const currentItems = prevCart?.items || [];
       const newItems =
         quantity <= 0
-          ? prevCart.items.filter((item) => item.id !== id)
-          : prevCart.items.map((item) =>
+          ? currentItems.filter((item) => item.id !== id)
+          : currentItems.map((item) =>
               item.id === id ? { ...item, quantity } : item,
             );
 
@@ -151,17 +162,25 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   };
 
   const convertToBackendCart = (): BackendCart => {
-    const backendItems: CartItemDTO[] = cart.items.map((item) => ({
-      productDetailId: `${item.product.id || item.product.productId}-${item.size}-${item.color}`,
-      quantity: item.quantity,
-      productName:
-        item.product.name || item.product.productName || "Unknown Product",
-      price: item.price,
-      size: item.size,
-      color: item.color,
-      stockQuantity: item.product.stock || 0,
-      image: item.product.image,
-    }));
+    const currentItems = cart?.items || [];
+    const backendItems: CartItemDTO[] = currentItems.map((item) => {
+      // Find matching detail from product details array to get the real database ID
+      const detail = item.product.productDetails?.find(
+        (d: any) => d.size === item.size && d.color === item.color
+      );
+      
+      return {
+        productDetailId: detail?.productDetailId || `${item.product.id || item.product.productId}-${item.size}-${item.color}`,
+        quantity: item.quantity,
+        productName:
+          item.product.name || item.product.productName || "Unknown Product",
+        price: item.price,
+        size: item.size,
+        color: item.color,
+        stockQuantity: detail?.stockQuantity || item.product.stock || 0,
+        image: item.product.image,
+      };
+    });
 
     return {
       items: backendItems,
@@ -174,7 +193,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     clearError();
     const backendCart = convertToBackendCart();
 
-    const orderRequest: OrderRequest = {
+    const orderRequest: any = {
       customerId,
       cart: backendCart,
       paymentMethod,

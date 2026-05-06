@@ -15,7 +15,13 @@ api.interceptors.request.use(
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("token");
       if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+        if (config.headers) {
+          if (typeof config.headers.set === "function") {
+            config.headers.set("Authorization", `Bearer ${token}`);
+          } else {
+            config.headers["Authorization"] = `Bearer ${token}`;
+          }
+        }
         console.log(
           `[API] Request: ${config.method?.toUpperCase()} ${config.url}, Token present: true`,
         );
