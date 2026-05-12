@@ -1,3 +1,7 @@
+import type { Supplier } from "@/types/supplier";
+
+export type { Supplier };
+
 export interface Category {
   categoryId: string;
   categoryName: string;
@@ -8,11 +12,6 @@ export interface ProductDetail {
   color: string;
   size: number;
   stockQuantity: number;
-}
-
-export interface Supplier {
-  supplierId: string;
-  supplierName: string;
 }
 
 export interface Product {

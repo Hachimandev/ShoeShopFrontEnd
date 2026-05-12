@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ShoppingBag, Settings, Users, Box, UserCog } from "lucide-react";
+import { ShoppingBag, Settings, Users, Box, UserCog, Truck } from "lucide-react";
 import { ReactNode } from "react";
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
@@ -15,6 +15,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   const navItems = [
     { name: "Orders", href: "/admin", icon: ShoppingBag },
     { name: "Products", href: "/admin/products", icon: Box },
+    { name: "Nhà cung cấp", href: "/admin/suppliers", icon: Truck },
     { name: "Khách hàng", href: "/admin/customers", icon: Users },
     { name: "Nhân viên", href: "/admin/employees", icon: UserCog },
     { name: "Settings", href: "/admin/settings", icon: Settings },
