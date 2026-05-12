@@ -1,116 +1,261 @@
-import Link from "next/link"
-import { ChevronRight, Star, ShoppingBag } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import Image from "next/image"
+"use client";
+
+import Link from "next/link";
+import { ChevronRight, Star, ShoppingBag, ShieldCheck, Truck, Headphones, RotateCcw, Zap } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { productService } from "@/services/product.service";
+import { Product } from "@/types/product";
+
+const features = [
+  {
+    icon: Truck,
+    title: "Free Express Delivery",
+    description: "Enjoy free and fast shipping on all premium collections over $200."
+  },
+  {
+    icon: ShieldCheck,
+    title: "100% Authentic Quality",
+    description: "Every product is verified and guaranteed to be 100% genuine."
+  },
+  {
+    icon: RotateCcw,
+    title: "30-Day Easy Returns",
+    description: "Not satisfied? Return it within 30 days for a full refund, no questions asked."
+  },
+  {
+    icon: Headphones,
+    title: "24/7 Premium Support",
+    description: "Our dedicated shoe experts are here to help you around the clock."
+  }
+];
 
 export default function Home() {
-  return (
-    <>
-      <main className="flex-1">
-        {/* Hero Section */}
-        <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-slate-50">
-          <div className="container px-4 md:px-6 mx-auto">
-            <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
-              <div className="flex flex-col justify-center space-y-4 text-left">
-                <div className="space-y-4">
-                  <h1 className="text-4xl font-extrabold tracking-tighter sm:text-6xl xl:text-7xl/none">
-                    Step into Style <br /> with SHOESHOP
-                  </h1>
-                  <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed">
-                    Discover the perfect blend of comfort, durability, and world-class design. Your journey to excellence starts with the right pair of shoes.
-                  </p>
-                </div>
-                <div className="flex flex-col gap-3 min-[400px]:flex-row">
-                  <Link href="/products">
-                    <Button size="lg" className="px-10 h-14 text-lg w-full">
-                      Shop Now
-                      <ChevronRight className="ml-2 h-5 w-5" />
-                    </Button>
-                  </Link>
-                  <Link href="/products">
-                    <Button size="lg" variant="outline" className="px-10 h-14 text-lg w-full">
-                      View Catalog
-                    </Button>
-                  </Link>
-                </div>
-                <div className="flex items-center gap-4 text-sm font-medium">
-                  <div className="flex -space-x-2">
-                    {[1, 2, 3, 4].map((i) => (
-                      <div key={i} className="h-8 w-8 rounded-full border-2 border-white bg-slate-200 overflow-hidden relative">
-                         <Image src="/login_picture.jpg" alt="user" fill sizes="32px" className="object-cover" />
-                      </div>
-                    ))}
-                  </div>
-                  <p className="text-muted-foreground">Trusted by 10,000+ happy customers</p>
-                </div>
-              </div>
-              <div className="mx-auto flex w-full items-center justify-center lg:order-last">
-                <div className="relative h-[300px] w-full sm:h-[400px] md:h-[500px] lg:h-[600px]">
-                  <Image
-                    alt="Latest Shoe Collection"
-                    className="object-cover rounded-3xl shadow-2xl transition-transform hover:scale-[1.02] duration-500"
-                    fill
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    src="/login_picture.jpg"
-                    priority
-                  />
-                  <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-2xl shadow-xl hidden md:block">
-                    <p className="text-sm font-bold">New Arrival</p>
-                    <p className="text-2xl font-black text-primary">NIKE AIR MAX</p>
-                    <Button variant="link" className="p-0 h-auto text-primary font-bold">Learn more →</Button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-        {/* Featured Products */}
-        <section className="w-full py-20 bg-white">
-          <div className="container px-4 md:px-6 mx-auto">
-            <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
-              <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Our Best Sellers</h2>
-                <p className="max-w-[700px] text-muted-foreground md:text-xl">
-                  Explore our most loved styles, designed for performance and built for everyday life.
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const data = await productService.getAllProducts();
+        // Just take the first 3 for the featured section
+        setFeaturedProducts(data.slice(0, 3));
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
+
+  return (
+    <main className="flex-1 flex flex-col w-full overflow-hidden">
+      {/* Hero Section */}
+      <section className="relative w-full pt-16 pb-20 md:pt-24 md:pb-32 lg:pt-32 lg:pb-40 bg-gradient-to-br from-slate-50 to-slate-100 overflow-hidden">
+        {/* Decorative background elements */}
+        <div className="absolute top-0 right-0 w-1/2 h-full bg-primary/5 rounded-l-[100px] -z-10 translate-x-1/4" />
+        <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-blue-100/50 rounded-full blur-3xl -z-10" />
+
+        <div className="container px-4 md:px-6 mx-auto relative z-10">
+          <div className="grid gap-12 lg:grid-cols-[1fr_500px] xl:grid-cols-[1.2fr_600px] items-center">
+            <div className="flex flex-col justify-center space-y-8 text-left">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border shadow-sm w-fit">
+                <Zap className="h-4 w-4 text-yellow-500 fill-yellow-500" />
+                <span className="text-sm font-bold tracking-tight">New Summer Collection 2026</span>
+              </div>
+
+              <div className="space-y-4">
+                <h1 className="text-5xl font-black tracking-tighter sm:text-6xl xl:text-[5.5rem] leading-[1.1]">
+                  Step into <span className="text-primary">Style</span> <br />
+                  Walk with <span className="text-primary relative inline-block">
+                    Power
+                    <svg className="absolute -bottom-2 left-0 w-full" viewBox="0 0 100 10" preserveAspectRatio="none">
+                      <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="4" fill="transparent" className="text-primary/30" />
+                    </svg>
+                  </span>
+                </h1>
+                <p className="max-w-[600px] text-slate-600 md:text-xl/relaxed font-medium">
+                  Discover the perfect blend of comfort, durability, and world-class design. Your journey to excellence starts with the right pair of shoes.
                 </p>
               </div>
-            </div>
-            <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-3">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="group relative bg-slate-50 rounded-3xl p-4 transition-all hover:bg-white hover:shadow-2xl">
-                  <div className="aspect-[4/5] overflow-hidden rounded-2xl bg-white relative mb-4">
-                     <Image
-                      alt="Shoe Product"
-                      className="object-cover transition-transform group-hover:scale-110 duration-500"
-                      fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      src="/login_picture.jpg"
-                    />
-                    <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-sm">
-                      <ShoppingBag className="h-5 w-5 text-primary" />
+
+              <div className="flex flex-col gap-4 min-[400px]:flex-row">
+                <Link href="/products" className="w-full sm:w-auto">
+                  <Button size="lg" className="px-10 h-14 text-lg w-full sm:w-auto rounded-full shadow-xl shadow-primary/20 hover:scale-105 transition-transform">
+                    Shop Collection
+                    <ChevronRight className="ml-2 h-5 w-5" />
+                  </Button>
+                </Link>
+                <Link href="/products" className="w-full sm:w-auto">
+                  <Button size="lg" variant="outline" className="px-10 h-14 text-lg w-full sm:w-auto rounded-full bg-white/50 backdrop-blur-md border-2 hover:bg-white">
+                    Explore Brands
+                  </Button>
+                </Link>
+              </div>
+
+              <div className="flex items-center gap-4 pt-4">
+                <div className="flex -space-x-3">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className="h-10 w-10 rounded-full border-2 border-white bg-slate-200 overflow-hidden relative shadow-sm">
+                      <Image src="/login_picture.jpg" alt={`Customer ${i}`} fill sizes="40px" className="object-cover" />
                     </div>
+                  ))}
+                </div>
+                <div className="flex flex-col">
+                  <div className="flex items-center gap-1 text-yellow-500">
+                    {[1, 2, 3, 4, 5].map(i => <Star key={i} className="h-4 w-4 fill-current" />)}
                   </div>
-                  <div className="space-y-1 px-2">
-                    <div className="flex items-center justify-between">
-                      <h3 className="font-bold text-xl">Air Jordan {i}</h3>
-                      <span className="font-black text-2xl text-primary">$189.00</span>
-                    </div>
-                    <p className="text-sm text-muted-foreground">Premium Men&apos;s Shoes</p>
-                    <div className="flex items-center gap-1 py-2 text-yellow-500">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <Star key={star} className="h-4 w-4 fill-current" />
-                      ))}
-                      <span className="text-xs text-muted-foreground ml-2">(4.9)</span>
-                    </div>
+                  <p className="text-sm font-bold text-slate-600">Trusted by 10,000+ customers</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="mx-auto flex w-full items-center justify-center lg:order-last relative">
+              <div className="relative h-[400px] w-full sm:h-[500px] md:h-[600px] lg:h-[700px] z-10">
+                <Image
+                  alt="Premium Sneaker Collection"
+                  className="object-cover rounded-[3rem] shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-700 hover:scale-[1.02]"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  src="/login_picture.jpg"
+                  priority
+                  loading="eager"
+                />
+
+                {/* Floating Badges */}
+                <div className="absolute top-10 -left-8 bg-white p-4 rounded-2xl shadow-xl border animate-bounce-slow hidden md:flex items-center gap-3">
+                  <div className="bg-green-100 p-2 rounded-full">
+                    <ShieldCheck className="h-6 w-6 text-green-600" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-slate-500 uppercase">Verified</p>
+                    <p className="text-sm font-black text-slate-900">100% Authentic</p>
                   </div>
                 </div>
-              ))}
+
+                <div className="absolute bottom-20 -right-8 bg-white p-5 rounded-2xl shadow-xl border hidden md:block transition-transform hover:-translate-y-2">
+                  <p className="text-xs font-bold text-primary uppercase tracking-wider mb-1">New Arrival</p>
+                  <p className="text-xl font-black text-slate-900 mb-2">AIR MAX 2026</p>
+                  <Link href="/products" className="text-sm font-bold text-slate-500 hover:text-primary flex items-center">
+                    Discover now <ChevronRight className="h-4 w-4 ml-1" />
+                  </Link>
+                </div>
+              </div>
+
+              {/* Decorative background blob for image */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-blue-400/20 rounded-[3rem] blur-2xl -z-10 transform scale-105 rotate-3" />
             </div>
           </div>
-        </section>
-      </main>
-    </>
-  )
-}
+        </div>
+      </section>
 
+      {/* Why Choose Us Section */}
+      <section className="w-full py-24 bg-white">
+        <div className="container px-4 md:px-6 mx-auto">
+          <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
+            <h2 className="text-primary font-bold tracking-widest uppercase text-sm">The ShoeShop Difference</h2>
+            <h3 className="text-3xl md:text-5xl font-black tracking-tight">Why Sneakerheads Choose Us</h3>
+            <p className="text-lg text-slate-600">We don&apos;t just sell shoes. We deliver an unparalleled shopping experience from checkout to unboxing.</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {features.map((feature, idx) => (
+              <div key={idx} className="group flex flex-col items-center text-center p-8 rounded-3xl bg-slate-50 border border-slate-100 hover:border-primary/20 hover:bg-white hover:shadow-xl transition-all duration-300">
+                <div className="h-16 w-16 rounded-2xl bg-white shadow-sm flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-primary group-hover:text-white text-primary transition-all duration-300">
+                  <feature.icon className="h-8 w-8" />
+                </div>
+                <h4 className="text-xl font-bold mb-3">{feature.title}</h4>
+                <p className="text-slate-600 text-sm leading-relaxed">{feature.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Products */}
+      <section className="w-full py-24 bg-slate-50">
+        <div className="container px-4 md:px-6 mx-auto">
+          <div className="flex flex-col md:flex-row items-end justify-between mb-12 gap-6">
+            <div className="space-y-4 max-w-2xl">
+              <h2 className="text-primary font-bold tracking-widest uppercase text-sm">Trending Now</h2>
+              <h3 className="text-3xl md:text-5xl font-black tracking-tight">Hottest Drops</h3>
+            </div>
+            <Link href="/products">
+              <Button variant="outline" className="rounded-full bg-white hover:bg-slate-100 border-2">
+                View All Products <ChevronRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {isLoading ? (
+              // Loading Skeletons
+              Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="bg-white rounded-[2rem] p-4 h-[500px] animate-pulse shadow-sm">
+                  <div className="aspect-[4/5] rounded-3xl bg-slate-200 mb-6" />
+                  <div className="h-6 bg-slate-200 rounded w-3/4 mb-3" />
+                  <div className="h-4 bg-slate-200 rounded w-1/2" />
+                </div>
+              ))
+            ) : featuredProducts.length > 0 ? (
+              featuredProducts.map((product, i) => (
+                <Link key={product.productId} href={`/products/${product.productId}`} className="group block">
+                  <div className="bg-white rounded-[2rem] p-4 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 border border-slate-100 h-full flex flex-col">
+                    <div className="aspect-[4/5] overflow-hidden rounded-3xl bg-slate-50 relative mb-6">
+                      <Image
+                        alt={product.productName || "Product"}
+                        className="object-cover transition-transform duration-700 group-hover:scale-110"
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        src={product.image || "/login_picture.jpg"}
+                        priority={i === 0}
+                      />
+                      <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full shadow-sm">
+                        <span className="text-xs font-black tracking-wider uppercase text-slate-800">
+                          {typeof product.category === 'object' ? product.category?.categoryName : product.category}
+                        </span>
+                      </div>
+                      <div className="absolute bottom-4 right-4 translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                        <div className="bg-primary text-white p-3 rounded-full shadow-lg">
+                          <ShoppingBag className="h-6 w-6" />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="px-2 flex flex-col flex-1">
+                      <div className="flex items-center justify-between mb-2">
+                        <p className="text-sm font-bold text-slate-500">{product.brand}</p>
+                        <div className="flex items-center gap-1 text-yellow-500">
+                          <Star className="h-4 w-4 fill-current" />
+                          <span className="text-xs font-bold text-slate-700">{product.rating || "5.0"}</span>
+                        </div>
+                      </div>
+                      <h3 className="font-black text-2xl leading-tight mb-4 group-hover:text-primary transition-colors">
+                        {product.productName}
+                      </h3>
+                      <div className="mt-auto flex items-end justify-between">
+                        <div>
+                          <p className="text-sm font-bold text-slate-400 mb-1">Price</p>
+                          <span className="font-black text-3xl text-slate-900">${product.price?.toLocaleString()}.00</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              ))
+            ) : (
+              // Fallback if no products
+              <div className="col-span-full text-center py-20 bg-white rounded-3xl border border-dashed">
+                <p className="text-slate-500">No products available at the moment.</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+
+    </main>
+  );
+}
