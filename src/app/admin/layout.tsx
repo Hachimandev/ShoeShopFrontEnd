@@ -1,16 +1,22 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ShoppingBag, Settings, Users, Box } from "lucide-react";
+import { ShoppingBag, Settings, Users, Box, UserCog } from "lucide-react";
 import { ReactNode } from "react";
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
+  const linkActive = (href: string) => {
+    if (href === "/admin") return pathname === "/admin";
+    return pathname === href || pathname.startsWith(`${href}/`);
+  };
+
   const navItems = [
     { name: "Orders", href: "/admin", icon: ShoppingBag },
     { name: "Products", href: "/admin/products", icon: Box },
-    { name: "Users", href: "/admin/users", icon: Users },
+    { name: "Khách hàng", href: "/admin/customers", icon: Users },
+    { name: "Nhân viên", href: "/admin/employees", icon: UserCog },
     { name: "Settings", href: "/admin/settings", icon: Settings },
   ];
 
@@ -23,7 +29,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         </div>
         <nav className="p-4 space-y-1.5">
           {navItems.map((item) => {
-            const isActive = pathname === item.href;
+            const isActive = linkActive(item.href);
             const Icon = item.icon;
             return (
               <Link
