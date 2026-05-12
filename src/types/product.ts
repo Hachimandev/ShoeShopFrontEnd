@@ -10,19 +10,29 @@ export interface ProductDetail {
   stockQuantity: number;
 }
 
+export interface Supplier {
+  supplierId: string;
+  supplierName: string;
+}
+
 export interface Product {
-  id?: number;
-  productId?: string;
-  name?: string;
-  productName?: string;
+  id?: number; // For dummy data
+  productId?: string; // From backend
+  name?: string; // For dummy data
+  productName?: string; // From backend
   price: number;
   originalPrice?: number;
   description: string;
   image: string;
-  category: string | Category;
+  category: Category | string | any;
   brand: string;
-  stock: number;
-  rating: number;
-  reviews: number;
+  stock?: number;
+  rating?: number;
+  reviews?: number;
+  origin?: string;
+  material?: string;
+  tax?: number;
+  gender?: string;
+  supplier?: Supplier | any;
   productDetails?: ProductDetail[];
 }

@@ -148,6 +148,7 @@ export default function ProductDetailPage({
                 alt={product.productName || product.name || ""}
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
                 fill
+                sizes="(max-width: 768px) 100vw, 50vw"
                 src={product.image || "/login_picture.jpg"}
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
@@ -158,7 +159,7 @@ export default function ProductDetailPage({
               <div className="absolute top-6 left-6 bg-white/90 backdrop-blur px-4 py-2 rounded-2xl shadow-sm">
                 <span className="text-xs font-black tracking-widest text-primary uppercase">
                   {typeof product.category === "object"
-                    ? product.category.categoryName
+                    ? product.category?.categoryName
                     : product.category}
                 </span>
               </div>
@@ -210,11 +211,10 @@ export default function ProductDetailPage({
                     <button
                       key={size}
                       onClick={() => setSelectedSize(size)}
-                      className={`h-14 border-2 rounded-2xl flex items-center justify-center text-lg font-black transition-all active:scale-95 ${
-                        selectedSize === size
+                      className={`h-14 border-2 rounded-2xl flex items-center justify-center text-lg font-black transition-all active:scale-95 ${selectedSize === size
                           ? "border-primary text-primary ring-2 ring-primary"
                           : "border-slate-100 hover:border-slate-300"
-                      }`}
+                        }`}
                     >
                       {size}
                     </button>
@@ -235,11 +235,10 @@ export default function ProductDetailPage({
                     <button
                       key={color}
                       onClick={() => setSelectedColor(color)}
-                      className={`h-10 px-4 rounded-full border-2 transition-all font-bold text-sm ${
-                        selectedColor === color
+                      className={`h-10 px-4 rounded-full border-2 transition-all font-bold text-sm ${selectedColor === color
                           ? "border-primary bg-primary text-white"
                           : "border-slate-200 hover:border-slate-300 text-slate-600"
-                      }`}
+                        }`}
                     >
                       {color}
                     </button>

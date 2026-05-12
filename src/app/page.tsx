@@ -37,7 +37,7 @@ export default function Home() {
                   <div className="flex -space-x-2">
                     {[1, 2, 3, 4].map((i) => (
                       <div key={i} className="h-8 w-8 rounded-full border-2 border-white bg-slate-200 overflow-hidden relative">
-                         <Image src="/login_picture.jpg" alt="user" fill className="object-cover" />
+                         <Image src="/login_picture.jpg" alt="user" fill sizes="32px" className="object-cover" />
                       </div>
                     ))}
                   </div>
@@ -50,6 +50,7 @@ export default function Home() {
                     alt="Latest Shoe Collection"
                     className="object-cover rounded-3xl shadow-2xl transition-transform hover:scale-[1.02] duration-500"
                     fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
                     src="/login_picture.jpg"
                     priority
                   />
@@ -83,6 +84,7 @@ export default function Home() {
                       alt="Shoe Product"
                       className="object-cover transition-transform group-hover:scale-110 duration-500"
                       fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       src="/login_picture.jpg"
                     />
                     <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-sm">
