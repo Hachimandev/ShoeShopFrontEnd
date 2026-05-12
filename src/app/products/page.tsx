@@ -83,6 +83,7 @@ export default function ProductsPage() {
                         alt={product.productName}
                       className="object-cover transition-transform group-hover:scale-110 duration-500"
                       fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       src={product.image || "/login_picture.jpg"}
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
@@ -97,7 +98,7 @@ export default function ProductsPage() {
                   </div>
                   <div className="space-y-1 px-1">
                     <p className="text-xs font-bold text-primary uppercase tracking-wider">
-                      {product.category?.categoryName || product.category}
+                      {typeof product.category === 'object' ? product.category?.categoryName : product.category}
                     </p>
                     <h3 className="font-bold text-lg leading-tight group-hover:text-primary transition-colors">
                       {product.productName || product.name}
