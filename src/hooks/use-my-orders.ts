@@ -41,7 +41,9 @@ export function useMyOrders() {
     try {
       const cid = await resolveCustomerId();
       if (!cid) {
-        setError("Không tìm thấy tài khoản khách hàng. Vui lòng đăng nhập lại.");
+        setError(
+          "Không tìm thấy tài khoản khách hàng. Vui lòng đăng nhập lại.",
+        );
         setOrders([]);
         setCustomerId(null);
         return;

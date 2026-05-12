@@ -19,13 +19,33 @@ export const authService = {
       // Tạo một object user giả lập tương ứng với logic Header đang dùng
       const user = {
         username: response.data.username,
-        fullName: response.data.username, // Có thể lấy fullName sau này qua API getCurrentUser
+        fullName: response.data.username,
         role:
           response.data.roles && response.data.roles.length > 0
             ? response.data.roles[0]
             : "USER",
       };
       localStorage.setItem("user", JSON.stringify(user));
+
+      // Gọi API lấy thông tin chi tiết khách hàng và lưu vào localStorage
+      try {
+        const customerResponse = await api.get(
+          `/customers/info/${response.data.username}`,
+        );
+        if (customerResponse.data) {
+          const fullUserData = {
+            ...user,
+            fullName: customerResponse.data.fullName || user.fullName,
+            email: customerResponse.data.email,
+            phoneNumber: customerResponse.data.phoneNumber,
+            address: customerResponse.data.address,
+          };
+          localStorage.setItem("user", JSON.stringify(fullUserData));
+        }
+      } catch (err) {
+        console.error("Failed to fetch customer info on login:", err);
+        // Vẫn tiếp tục, thông tin basic vẫn được lưu
+      }
 
       // Phát sự kiện để Header cập nhật ngay lập tức
       window.dispatchEvent(new Event("auth-change"));

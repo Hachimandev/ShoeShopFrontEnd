@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { EditProfileModal } from "@/components/profile/edit-profile-modal";
 import { ProfileCard } from "@/components/profile/profile-card";
 import { ProfileSummary } from "@/components/profile/profile-summary";
+import { customerService } from "@/services/customer.service";
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -29,46 +30,28 @@ export default function ProfilePage() {
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
-    const loadUserData = () => {
+    const loadUserData = async () => {
       try {
-        const userData = localStorage.getItem("user");
-        let parsedUser = userData ? JSON.parse(userData) : null;
-
-        if (!parsedUser) {
-          const userInfo = localStorage.getItem("userInfo");
-          parsedUser = userInfo ? JSON.parse(userInfo) : null;
+        // Lấy username từ localStorage
+        const username = localStorage.getItem("username");
+        if (!username) {
+          setUser(null);
+          setIsLoading(false);
+          return;
         }
 
-        if (!parsedUser) {
-          const username = localStorage.getItem("username");
-          const email = localStorage.getItem("email");
-          const roles = localStorage.getItem("roles");
-          if (username) {
-            parsedUser = {
-              username,
-              email: email || undefined,
-              role: roles ? JSON.parse(roles)[0] : "Customer",
-            };
-          }
-        }
-
-        if (parsedUser) {
+        // Gọi API lấy thông tin khách hàng
+        try {
+          const customerInfo = await customerService.getCustomerInfo(username);
           const userData = {
-            username: parsedUser.username || "User",
-            fullName:
-              parsedUser.fullName ||
-              parsedUser.customer?.fullName ||
-              "User Profile",
-            email: parsedUser.email || "Not provided",
-            phone:
-              parsedUser.phone ||
-              parsedUser.customer?.phoneNumber ||
-              "Not provided",
-            address:
-              parsedUser.address ||
-              parsedUser.customer?.address ||
-              "Not provided",
-            role: parsedUser.role || "Customer",
+            username: username,
+            fullName: customerInfo.fullName || "User Profile",
+            email: customerInfo.email || "Not provided",
+            phone: customerInfo.phoneNumber || "Not provided",
+            address: customerInfo.address || "Not provided",
+            role: localStorage.getItem("roles")
+              ? JSON.parse(localStorage.getItem("roles") || "[]")[0]
+              : "Customer",
           };
           setUser(userData);
           setEditForm({
@@ -77,8 +60,31 @@ export default function ProfilePage() {
             phone: userData.phone,
             address: userData.address,
           });
-        } else {
-          setUser(null);
+        } catch (apiError) {
+          console.error("Failed to fetch customer info from API:", apiError);
+          // Fallback: Lấy từ localStorage
+          const userData = localStorage.getItem("user");
+          const parsedUser = userData ? JSON.parse(userData) : null;
+
+          if (parsedUser) {
+            const user = {
+              username: parsedUser.username || "User",
+              fullName: parsedUser.fullName || "User Profile",
+              email: parsedUser.email || "Not provided",
+              phone: parsedUser.phone || "Not provided",
+              address: parsedUser.address || "Not provided",
+              role: parsedUser.role || "Customer",
+            };
+            setUser(user);
+            setEditForm({
+              fullName: user.fullName,
+              email: user.email,
+              phone: user.phone,
+              address: user.address,
+            });
+          } else {
+            setUser(null);
+          }
         }
       } catch (error) {
         console.error("Error loading user data:", error);
@@ -157,7 +163,11 @@ export default function ProfilePage() {
     <div className="container mx-auto py-10 px-4 max-w-6xl">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-1 space-y-6">
-          <ProfileCard user={user} onLogout={handleLogout} activeNav="profile" />
+          <ProfileCard
+            user={user}
+            onLogout={handleLogout}
+            activeNav="profile"
+          />
         </div>
         <ProfileSummary user={user} onOpenEdit={handleOpenEdit} />
       </div>
