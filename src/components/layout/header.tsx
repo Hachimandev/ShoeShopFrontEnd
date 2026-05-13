@@ -83,7 +83,7 @@ export function Header() {
         href="/"
       >
         <ShoppingBag className="mr-2 h-6 w-6" />
-        <span>SHOESHOP</span>
+        <span>SHOE SHOP</span>
       </Link>
       <nav className="ml-auto flex gap-4 sm:gap-6 items-center">
         <Link
