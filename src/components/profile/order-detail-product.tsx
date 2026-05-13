@@ -43,7 +43,7 @@ export function OrderDetailProduct({
       "Đỏ (Red)": "#EF4444",
       Xanh: "#3B82F6",
       "Xanh (Blue)": "#3B82F6",
-      Xanh: "#10B981",
+      "Xanh lá": "#10B981",
       "Xanh lá (Green)": "#10B981",
       Vàng: "#FBBF24",
       "Vàng (Yellow)": "#FBBF24",

@@ -16,6 +16,10 @@ import { Edit2, Loader2 } from "lucide-react";
 import { useCustomer } from "@/hooks/useCustomer";
 import { toast } from "sonner";
 
+export default function EditProfilePage() {
+  return null; // This component is intended to be used as a client component elsewhere
+}
+
 export function EditProfileForm({
   user,
   onSuccess,

@@ -80,7 +80,7 @@ export default function ProductsPage() {
                 <div className="bg-white rounded-3xl p-3 transition-all hover:shadow-xl border border-transparent hover:border-slate-100">
                   <div className="aspect-square overflow-hidden rounded-2xl bg-slate-100 relative mb-4">
                             <Image
-                        alt={product.productName}
+                        alt={product.productName || "Product"}
                       className="object-cover transition-transform group-hover:scale-110 duration-500"
                       fill
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
