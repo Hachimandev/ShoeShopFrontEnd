@@ -70,20 +70,23 @@ export default function AdminProductsPage() {
   const stats = useMemo(() => {
     const total = products.length;
     const outOfStock = products.filter((p) => {
-      const stock = p.productDetails?.reduce((sum, d) => sum + d.stockQuantity, 0) || 0;
+      const stock =
+        p.productDetails?.reduce((sum, d) => sum + d.stockQuantity, 0) || 0;
       return stock === 0;
     }).length;
     const lowStock = products.filter((p) => {
-      const stock = p.productDetails?.reduce((sum, d) => sum + d.stockQuantity, 0) || 0;
+      const stock =
+        p.productDetails?.reduce((sum, d) => sum + d.stockQuantity, 0) || 0;
       return stock > 0 && stock < 10;
     }).length;
     return { total, outOfStock, lowStock };
   }, [products]);
 
   const filteredProducts = useMemo(() => {
-    return products.filter((p) =>
-      p.productName.toLowerCase().includes(search.toLowerCase()) ||
-      (p.productId || "").toLowerCase().includes(search.toLowerCase())
+    return products.filter(
+      (p) =>
+        (p.productName || "").toLowerCase().includes(search.toLowerCase()) ||
+        (p.productId || "").toLowerCase().includes(search.toLowerCase()),
     );
   }, [products, search]);
 
@@ -136,8 +139,12 @@ export default function AdminProductsPage() {
               <Box className="h-6 w-6" />
             </div>
             <div>
-              <p className="text-sm font-medium text-slate-600">Tổng sản phẩm</p>
-              <p className="text-3xl font-bold tabular-nums text-slate-900">{stats.total}</p>
+              <p className="text-sm font-medium text-slate-600">
+                Tổng sản phẩm
+              </p>
+              <p className="text-3xl font-bold tabular-nums text-slate-900">
+                {stats.total}
+              </p>
             </div>
           </CardContent>
         </Card>
@@ -148,7 +155,9 @@ export default function AdminProductsPage() {
             </div>
             <div>
               <p className="text-sm font-medium text-slate-600">Sắp hết hàng</p>
-              <p className="text-3xl font-bold tabular-nums text-slate-900">{stats.lowStock}</p>
+              <p className="text-3xl font-bold tabular-nums text-slate-900">
+                {stats.lowStock}
+              </p>
             </div>
           </CardContent>
         </Card>
@@ -159,7 +168,9 @@ export default function AdminProductsPage() {
             </div>
             <div>
               <p className="text-sm font-medium text-slate-600">Hết hàng</p>
-              <p className="text-3xl font-bold tabular-nums text-slate-900">{stats.outOfStock}</p>
+              <p className="text-3xl font-bold tabular-nums text-slate-900">
+                {stats.outOfStock}
+              </p>
             </div>
           </CardContent>
         </Card>
@@ -184,7 +195,7 @@ export default function AdminProductsPage() {
               <Button
                 variant="outline"
                 className="h-11 rounded-lg border-emerald-600 text-emerald-700 hover:bg-emerald-50"
-                onClick={() => { }}
+                onClick={() => {}}
                 disabled={exporting}
               >
                 <Upload className="mr-2 h-4 w-4" />
@@ -207,21 +218,35 @@ export default function AdminProductsPage() {
               <tbody className="divide-y divide-slate-100">
                 {paginatedProducts.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="px-6 py-12 text-center text-slate-500">
+                    <td
+                      colSpan={5}
+                      className="px-6 py-12 text-center text-slate-500"
+                    >
                       Không tìm thấy sản phẩm nào.
                     </td>
                   </tr>
                 ) : (
                   paginatedProducts.map((product) => {
-                    const totalStock = product.productDetails?.reduce((sum, d) => sum + d.stockQuantity, 0) || 0;
+                    const totalStock =
+                      product.productDetails?.reduce(
+                        (sum, d) => sum + d.stockQuantity,
+                        0,
+                      ) || 0;
                     const id = product.productId || String(product.id);
                     return (
-                      <tr key={id} className="hover:bg-slate-50/50 transition-colors">
+                      <tr
+                        key={id}
+                        className="hover:bg-slate-50/50 transition-colors"
+                      >
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-4">
                             <div className="h-12 w-12 rounded-lg border border-slate-200 bg-white flex-shrink-0 overflow-hidden">
                               {product.image ? (
-                                <img src={product.image} alt={product.productName} className="h-full w-full object-cover" />
+                                <img
+                                  src={product.image}
+                                  alt={product.productName}
+                                  className="h-full w-full object-cover"
+                                />
                               ) : (
                                 <div className="h-full w-full bg-slate-100 flex items-center justify-center">
                                   <Box className="h-6 w-6 text-slate-300" />
@@ -229,8 +254,12 @@ export default function AdminProductsPage() {
                               )}
                             </div>
                             <div className="min-w-0">
-                              <div className="font-semibold text-slate-900 truncate max-w-[200px]">{product.productName}</div>
-                              <div className="text-xs text-slate-500 font-mono mt-0.5">{id}</div>
+                              <div className="font-semibold text-slate-900 truncate max-w-[200px]">
+                                {product.productName}
+                              </div>
+                              <div className="text-xs text-slate-500 font-mono mt-0.5">
+                                {id}
+                              </div>
                             </div>
                           </div>
                         </td>
@@ -243,21 +272,39 @@ export default function AdminProductsPage() {
                         <td className="px-6 py-4">
                           <div className="flex flex-col gap-1.5">
                             <div className="flex items-center gap-2">
-                              <span className="font-medium text-slate-900">{totalStock}</span>
-                              <span className="text-slate-400 text-xs">tổng cộng</span>
+                              <span className="font-medium text-slate-900">
+                                {totalStock}
+                              </span>
+                              <span className="text-slate-400 text-xs">
+                                tổng cộng
+                              </span>
                             </div>
-                            <Badge variant="outline" className={`w-fit text-[10px] uppercase font-bold ${totalStock === 0 ? "border-red-200 bg-red-50 text-red-700" :
-                                totalStock < 10 ? "border-amber-200 bg-amber-50 text-amber-700" :
-                                  "border-emerald-200 bg-emerald-50 text-emerald-700"
-                              }`}>
-                              {totalStock === 0 ? "Hết hàng" : totalStock < 10 ? "Sắp hết" : "Có sẵn"}
+                            <Badge
+                              variant="outline"
+                              className={`w-fit text-[10px] uppercase font-bold ${
+                                totalStock === 0
+                                  ? "border-red-200 bg-red-50 text-red-700"
+                                  : totalStock < 10
+                                    ? "border-amber-200 bg-amber-50 text-amber-700"
+                                    : "border-emerald-200 bg-emerald-50 text-emerald-700"
+                              }`}
+                            >
+                              {totalStock === 0
+                                ? "Hết hàng"
+                                : totalStock < 10
+                                  ? "Sắp hết"
+                                  : "Có sẵn"}
                             </Badge>
                           </div>
                         </td>
                         <td className="px-6 py-4">
                           <div className="flex items-center justify-end gap-2">
                             <Link href={`/admin/products/${id}`}>
-                              <Button size="icon" variant="ghost" className="h-9 w-9 text-blue-600 hover:text-blue-700 hover:bg-blue-50">
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                className="h-9 w-9 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                              >
                                 <Pencil className="h-4 w-4" />
                               </Button>
                             </Link>
@@ -281,13 +328,21 @@ export default function AdminProductsPage() {
 
           <div className="p-4 md:p-6 flex items-center justify-between border-t border-slate-100">
             <p className="text-sm text-slate-500">
-              Hiển thị <span className="font-medium text-slate-900">{paginatedProducts.length}</span> trên <span className="font-medium text-slate-900">{filteredProducts.length}</span> sản phẩm
+              Hiển thị{" "}
+              <span className="font-medium text-slate-900">
+                {paginatedProducts.length}
+              </span>{" "}
+              trên{" "}
+              <span className="font-medium text-slate-900">
+                {filteredProducts.length}
+              </span>{" "}
+              sản phẩm
             </p>
             <div className="flex gap-2">
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => setPage(p => Math.max(1, p - 1))}
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page === 1}
                 className="rounded-lg"
               >
@@ -299,7 +354,7 @@ export default function AdminProductsPage() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                 disabled={page === totalPages || totalPages === 0}
                 className="rounded-lg"
               >
