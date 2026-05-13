@@ -12,6 +12,11 @@ const nextConfig: NextConfig = {
         pathname: '/images/**',
       },
       {
+        protocol: 'http',
+        hostname: '13.214.212.134',
+        pathname: '/images/**',
+      },
+      {
         protocol: 'https',
         hostname: '**.amazonaws.com',
         pathname: '/**',
