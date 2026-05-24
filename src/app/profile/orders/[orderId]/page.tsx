@@ -86,15 +86,13 @@ export default function OrderDetailPage({
 
     setBusy(true);
     try {
-      await orderService.cancelOrder(order.orderId, user.username, true);
-      setOrder((prev) => {
-        if (!prev) return prev;
-        return {
-          ...prev,
-          orderStatus: OrderStatus.AWAITING_CANCELLATION,
-        };
-      });
-      alert("Yêu cầu hủy đơn hàng đã được gửi thành công!");
+      const cancelledOrder = await orderService.updateOrderStatus(
+        order.orderId,
+        OrderStatus.CANCELLED,
+      );
+      setOrder(cancelledOrder);
+
+      alert("Đơn hàng đã được hủy thành công!");
     } catch (err) {
       console.error("Cancel order failed:", err);
       alert("Hủy đơn hàng thất bại. Vui lòng thử lại.");
@@ -113,7 +111,7 @@ export default function OrderDetailPage({
 
     setBusy(true);
     try {
-      await orderService.confirmReceived(order.orderId, user.username);
+      await orderService.confirmReceived(order.orderId, "");
       setOrder((prev) => {
         if (!prev) return prev;
         return {

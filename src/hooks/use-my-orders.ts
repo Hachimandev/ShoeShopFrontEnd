@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { authService } from "@/services/auth.service";
 import { orderService } from "@/services/order.service";
-import type { Order } from "@/types/order";
+import { OrderStatus, type Order } from "@/types/order";
 import {
   type CustomerOrderTab,
   filterOrdersByTab,
@@ -21,12 +21,6 @@ export function useMyOrders() {
     const username =
       typeof window !== "undefined" ? localStorage.getItem("username") : null;
     if (!username) return null;
-    try {
-      const id = await orderService.getCustomerIdByUsername(username);
-      if (id) return id;
-    } catch {
-      /* fallback below */
-    }
     try {
       const info = await authService.getCurrentUser(username);
       return info.customer?.customerId ?? null;
@@ -99,7 +93,7 @@ export function useMyOrders() {
       setActionOrderId(orderId);
       setError(null);
       try {
-        await orderService.cancelOrder(orderId, customerId, true);
+        await orderService.updateOrderStatus(orderId, OrderStatus.CANCELLED);
         await load();
       } catch (e: unknown) {
         console.error(e);

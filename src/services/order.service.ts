@@ -63,15 +63,15 @@ export const orderService = {
     approve: boolean,
   ): Promise<Order> => {
     const response = await api.post(`/orders/${id}/cancel`, null, {
-      params: { customerId, approve },
+      params: { customerId: customerId || "system", approve },
     });
     return response.data;
   },
 
   /** Khách xác nhận đã nhận hàng: SHIPPING → DELIVERED */
   confirmReceived: async (id: string, customerId: string): Promise<Order> => {
-    const response = await api.put(`/orders/${id}/confirm-received`, null, {
-      params: { customerId },
+    const response = await api.put(`/orders/${id}/status`, null, {
+      params: { status: "DELIVERED" },
     });
     return response.data;
   },
@@ -85,12 +85,6 @@ export const orderService = {
   // Lấy tóm tắt cart
   getCartSummary: async (cart: Cart): Promise<CartSummary> => {
     const response = await api.post("/orders/cart-summary", cart);
-    return response.data;
-  },
-
-  // Lấy customer ID từ username
-  getCustomerIdByUsername: async (username: string): Promise<string> => {
-    const response = await api.get(`/orders/customer/${username}`);
     return response.data;
   },
 

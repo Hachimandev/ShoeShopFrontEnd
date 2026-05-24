@@ -9,7 +9,6 @@ const api = axios.create({
   },
 });
 
-// Thêm interceptor để đính kèm token vào header cho mỗi request
 api.interceptors.request.use(
   (config) => {
     if (typeof window !== "undefined") {
@@ -22,13 +21,13 @@ api.interceptors.request.use(
             config.headers["Authorization"] = `Bearer ${token}`;
           }
         }
-        console.log(
-          `[API] Request: ${config.method?.toUpperCase()} ${config.url}, Token present: true`,
-        );
+        // console.log(
+        //   `[API] Request: ${config.method?.toUpperCase()} ${config.url}, Token present: true`,
+        // );
       } else {
-        console.warn(
-          `[API] Request: ${config.method?.toUpperCase()} ${config.url}, Token missing!`,
-        );
+        // console.warn(
+        //   `[API] Request: ${config.method?.toUpperCase()} ${config.url}, Token missing!`,
+        // );
       }
     }
     return config;
@@ -43,14 +42,14 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response) {
-      console.error(
-        `[API] Response error: ${error.response.status} ${error.response.statusText}`,
-        error.response.data,
-      );
+      // console.error(
+      //   `[API] Response error: ${error.response.status} ${error.response.statusText}`,
+      //   error.response.data,
+      // );
     } else if (error.request) {
-      console.error("[API] No response received:", error.request);
+      // console.error("[API] No response received:", error.request);
     } else {
-      console.error("[API] Error:", error.message);
+      // console.error("[API] Error:", error.message);
     }
     return Promise.reject(error);
   },
