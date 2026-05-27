@@ -7,6 +7,7 @@ import {
   Settings,
   ShoppingCart,
   LayoutDashboard,
+  Sparkles,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -36,7 +37,7 @@ export function Header() {
       const token = localStorage.getItem("token");
       const storedUser = localStorage.getItem("user");
       const storedRoles = localStorage.getItem("roles");
-      
+
       setIsLoggedIn(!!token);
       if (storedUser) {
         const parsedUser = JSON.parse(storedUser);
@@ -46,7 +47,7 @@ export function Header() {
             if (Array.isArray(rolesArray) && rolesArray.length > 0) {
               parsedUser.role = rolesArray[0];
             }
-          } catch(e) {}
+          } catch (e) {}
         }
         setUser(parsedUser);
       } else {
@@ -103,6 +104,13 @@ export function Header() {
           href="#"
         >
           Sales
+        </Link>
+        <Link
+          className="text-sm font-medium hover:underline underline-offset-4 flex items-center gap-1 bg-gradient-to-r from-blue-400 to-blue-600 text-white px-3 py-1 rounded-full hover:no-underline hover:shadow-lg transition-all"
+          href="/ai-chat"
+        >
+          <Sparkles className="h-4 w-4" />
+          <span>AI Chat</span>
         </Link>
 
         {/* Giỏ hàng */}
@@ -184,10 +192,12 @@ export function Header() {
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
-          <Button asChild variant="default" className="rounded-full px-6 font-bold">
-            <Link href="/auth/login">
-              Login
-            </Link>
+          <Button
+            asChild
+            variant="default"
+            className="rounded-full px-6 font-bold"
+          >
+            <Link href="/auth/login">Login</Link>
           </Button>
         )}
       </nav>
