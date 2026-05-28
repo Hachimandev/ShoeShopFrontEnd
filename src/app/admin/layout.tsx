@@ -1,11 +1,30 @@
 "use client";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { ShoppingBag, Settings, Users, Box, UserCog, Truck, LayoutDashboard } from "lucide-react";
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
+  const [isAuthorized, setIsAuthorized] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const rolesStr = localStorage.getItem("roles");
+    try {
+      const roles = JSON.parse(rolesStr || "[]");
+      if (!roles.includes("ROLE_ADMIN")) {
+        router.push("/");
+      } else {
+        setIsAuthorized (true);
+      }
+    } catch (error) {
+      router.push("/");
+    } finally {
+      setLoading(false);
+    }
+  }, [router]);
 
   const linkActive = (href: string) => {
     if (href === "/admin") return pathname === "/admin";
@@ -21,6 +40,16 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
     { name: "Nhân viên", href: "/admin/employees", icon: UserCog },
     { name: "Cài đặt", href: "/admin/settings", icon: Settings },
   ];
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (!isAuthorized) return null;
 
   return (
     <div className="flex min-h-[calc(100vh-4rem)] bg-gray-50/50">
