@@ -12,21 +12,34 @@ import { Product } from "@/types/product";
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const fetchProducts = async (search?: string) => {
+    setLoading(true);
+    try {
+      const data = await productService.getAllProducts({ searchTerm: search });
+      setProducts(data);
+    } catch (error) {
+      console.error("Failed to fetch products:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const data = await productService.getAllProducts();
-        setProducts(data);
-      } catch (error) {
-        console.error("Failed to fetch products:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchProducts();
   }, []);
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+    
+    // Debounce search
+    const timeoutId = setTimeout(() => {
+      fetchProducts(value);
+    }, 500);
+    return () => clearTimeout(timeoutId);
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-50">
@@ -42,7 +55,12 @@ export default function ProductsPage() {
           <div className="flex w-full md:w-auto items-center gap-2">
             <div className="relative flex-1 md:w-64">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input className="pl-8" placeholder="Search shoes..." />
+              <Input
+                className="pl-8"
+                placeholder="Search shoes..."
+                value={searchTerm}
+                onChange={handleSearch}
+              />
             </div>
             <Button variant="outline" className="gap-2">
               <Filter className="h-4 w-4" />
