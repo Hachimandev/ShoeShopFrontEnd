@@ -10,6 +10,7 @@ export interface ChatMessageMetadata {
   suggestedProducts?: SuggestedProduct[];
   orderCreated?: OrderCreatedInfo;
   actionTaken?: string;
+  orderStep?: string; // Track order flow: ASKING_FOR_ADDRESS, ASKING_FOR_CONFIRMATION, ORDER_CREATED
 }
 
 export interface SuggestedProduct {
@@ -25,6 +26,7 @@ export interface OrderCreatedInfo {
   status: string;
   totalAmount: number;
   items: OrderItemInfo[];
+  orderLink?: string; // Link to view order details
 }
 
 export interface OrderItemInfo {
@@ -38,6 +40,7 @@ export interface AIChatRequest {
   message: string;
   conversationHistory?: ChatMessage[];
   userId?: string;
+  customerId?: string; // Customer ID for order creation
 }
 
 export interface AIChatResponse {
@@ -45,6 +48,7 @@ export interface AIChatResponse {
   suggestedProducts?: SuggestedProduct[];
   autoOrderCreated?: OrderCreatedInfo;
   actionPerformed?: string;
+  orderStep?: string; // Track order flow: ASKING_FOR_ADDRESS, ASKING_FOR_CONFIRMATION, ORDER_CREATED
 }
 
 export interface ChatSession {

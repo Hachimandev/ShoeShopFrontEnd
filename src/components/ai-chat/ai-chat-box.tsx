@@ -14,6 +14,29 @@ export const AIChatBox = () => {
   const [input, setInput] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // Get last order step from messages
+  const getLastOrderStep = () => {
+    for (let i = messages.length - 1; i >= 0; i--) {
+      const step = messages[i].metadata?.orderStep;
+      if (step) {
+        return step;
+      }
+    }
+    return null;
+  };
+
+  const getPlaceholder = () => {
+    const lastStep = getLastOrderStep();
+    switch (lastStep) {
+      case "ASKING_FOR_ADDRESS":
+        return "Nhập địa chỉ và số điện thoại (ví dụ: Địa chỉ: 123 Đường ABC, SĐT: 0123456789)";
+      case "ASKING_FOR_CONFIRMATION":
+        return "Xác nhận đặt hàng (gõ: có/không)";
+      default:
+        return "Bạn muốn tìm giày như thế nào?";
+    }
+  };
+
   const handleSendMessage = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (input.trim()) {
@@ -60,7 +83,9 @@ export const AIChatBox = () => {
           <div className="flex items-center justify-center h-full text-center">
             <div className="text-gray-500">
               <ShoppingCart className="mx-auto mb-2 h-10 w-10" />
-              <p className="font-semibold">Chào mừng bạn đến với trợ lý mua sắm AI!</p>
+              <p className="font-semibold">
+                Chào mừng bạn đến với trợ lý mua sắm AI!
+              </p>
               <p className="text-sm mt-2">
                 Hãy nhắn để tìm giày, gợi ý sản phẩm hoặc hỗ trợ đặt hàng
               </p>
@@ -91,7 +116,7 @@ export const AIChatBox = () => {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Bạn muốn tìm giày như thế nào?"
+            placeholder={getPlaceholder()}
             disabled={isLoading}
             className="flex-1"
           />
@@ -106,7 +131,8 @@ export const AIChatBox = () => {
         <p className="text-xs text-gray-500 mt-2 flex items-center gap-1">
           <Lightbulb className="h-3 w-3" />
           <span>
-            Thử: &quot;Tìm giày Nike dưới 500000&quot; hoặc &quot;Đặt đôi giày này&quot;
+            Thử: &quot;Tìm giày Nike dưới 500000&quot; hoặc &quot;Đặt đôi giày
+            này&quot;
           </span>
         </p>
       </div>
@@ -165,7 +191,20 @@ const MessageBubble = ({ message }: { message: ChatMessage }) => {
               Đã tạo đơn hàng!
             </div>
             <p>Mã đơn: {message.metadata.orderCreated.orderId}</p>
-            <p>Tổng tiền: {message.metadata.orderCreated.totalAmount}</p>
+            <p>
+              Tổng tiền:{" "}
+              {message.metadata.orderCreated.totalAmount.toLocaleString()} ₫
+            </p>
+            {message.metadata.orderCreated.orderLink && (
+              <a
+                href={message.metadata.orderCreated.orderLink}
+                className="mt-2 inline-block text-blue-600 hover:text-blue-800 underline font-semibold"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Xem chi tiết đơn hàng →
+              </a>
+            )}
           </div>
         )}
       </div>

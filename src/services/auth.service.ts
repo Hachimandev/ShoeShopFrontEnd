@@ -30,11 +30,12 @@ export const authService = {
       // Gọi API lấy thông tin chi tiết khách hàng và lưu vào localStorage
       try {
         const customerResponse = await api.get(
-          `/customers/info/${response.data.username}`,
+          `/customers/${response.data.username}`,
         );
         if (customerResponse.data) {
           const fullUserData = {
             ...user,
+            customerId: customerResponse.data.customerId,
             fullName: customerResponse.data.fullName || user.fullName,
             email: customerResponse.data.email,
             phoneNumber: customerResponse.data.phoneNumber,
