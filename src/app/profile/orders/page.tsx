@@ -38,6 +38,7 @@ export default function ProfileOrdersPage() {
 
   const handleLogout = () => {
     localStorage.clear();
+    window.dispatchEvent(new Event("auth-change"));
     router.push("/");
   };
 

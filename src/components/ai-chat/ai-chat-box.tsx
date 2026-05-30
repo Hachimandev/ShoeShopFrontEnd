@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Bot, Lightbulb, Send, Trash2, ShoppingCart } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 export const AIChatBox = () => {
   const { messages, isLoading, sendMessage, clearChat, messagesEndRef } =
@@ -196,14 +197,12 @@ const MessageBubble = ({ message }: { message: ChatMessage }) => {
               {message.metadata.orderCreated.totalAmount.toLocaleString()} ₫
             </p>
             {message.metadata.orderCreated.orderLink && (
-              <a
+              <Link
                 href={message.metadata.orderCreated.orderLink}
                 className="mt-2 inline-block text-blue-600 hover:text-blue-800 underline font-semibold"
-                target="_blank"
-                rel="noopener noreferrer"
               >
                 Xem chi tiết đơn hàng →
-              </a>
+              </Link>
             )}
           </div>
         )}

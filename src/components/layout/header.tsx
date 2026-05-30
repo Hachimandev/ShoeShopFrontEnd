@@ -70,6 +70,8 @@ export function Header() {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("username");
+    localStorage.removeItem("roles");
     localStorage.removeItem("user");
     setIsLoggedIn(false);
     setUser(null);

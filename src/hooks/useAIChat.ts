@@ -93,6 +93,32 @@ export const useAIChat = () => {
     return () => window.removeEventListener("auth-change", handleAuthChange);
   }, []);
 
+  // Load messages from localStorage when customerId changes
+  useEffect(() => {
+    const username = localStorage.getItem("username");
+    const token = localStorage.getItem("token");
+    if (username && token && customerId) {
+      const saved = localStorage.getItem(`ai-chat-messages-${username}`);
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          const messagesWithDates = parsed.map((m: any) => ({
+            ...m,
+            timestamp: new Date(m.timestamp),
+          }));
+          setMessages(messagesWithDates);
+        } catch (e) {
+          console.error("Failed to parse saved chat messages:", e);
+          setMessages([]);
+        }
+      } else {
+        setMessages([]);
+      }
+    } else {
+      setMessages([]);
+    }
+  }, [customerId]);
+
   // Auto-scroll to bottom
   const scrollToBottom = useCallback(() => {
     setTimeout(() => {
@@ -116,7 +142,15 @@ export const useAIChat = () => {
         timestamp: new Date(),
       };
 
-      setMessages((prev) => [...prev, userMsg]);
+      const updatedMessagesWithUser = [...messages, userMsg];
+      setMessages(updatedMessagesWithUser);
+
+      // Save user message to localStorage if logged in
+      const username = localStorage.getItem("username");
+      if (username) {
+        localStorage.setItem(`ai-chat-messages-${username}`, JSON.stringify(updatedMessagesWithUser));
+      }
+
       setIsLoading(true);
 
       try {
@@ -142,11 +176,24 @@ export const useAIChat = () => {
           },
         };
 
-        setMessages((prev) => [...prev, assistantMsg]);
+        const finalUpdatedMessages = [...updatedMessagesWithUser, assistantMsg];
+        setMessages(finalUpdatedMessages);
+
+        // Save assistant message to localStorage if logged in
+        if (username) {
+          localStorage.setItem(`ai-chat-messages-${username}`, JSON.stringify(finalUpdatedMessages));
+        }
 
         // Show notifications based on order step
         if (response.orderStep === "ASKING_FOR_ADDRESS") {
-          toast.info("Vui lòng cung cấp địa chỉ và số điện thoại");
+          const msgLower = response.message.toLowerCase();
+          if (msgLower.includes("địa chỉ và số điện thoại")) {
+            toast.info("Vui lòng cung cấp địa chỉ và số điện thoại");
+          } else if (msgLower.includes("địa chỉ")) {
+            toast.info("Vui lòng cung cấp địa chỉ giao hàng");
+          } else if (msgLower.includes("số điện thoại")) {
+            toast.info("Vui lòng cung cấp số điện thoại");
+          }
         } else if (response.orderStep === "ASKING_FOR_CONFIRMATION") {
           toast.info("Vui lòng xác nhận đơn hàng");
         } else if (response.orderStep === "ORDER_CREATED") {
@@ -157,7 +204,9 @@ export const useAIChat = () => {
 
         if (
           response.suggestedProducts &&
-          response.suggestedProducts.length > 0
+          response.suggestedProducts.length > 0 &&
+          response.orderStep !== "ASKING_FOR_ADDRESS" && 
+          response.orderStep !== "ASKING_FOR_CONFIRMATION"
         ) {
           toast.info(
             `Tìm thấy ${response.suggestedProducts.length} sản phẩm phù hợp`,
@@ -177,6 +226,10 @@ export const useAIChat = () => {
 
   const clearChat = useCallback(() => {
     setMessages([]);
+    const username = localStorage.getItem("username");
+    if (username) {
+      localStorage.removeItem(`ai-chat-messages-${username}`);
+    }
   }, []);
 
   return {
