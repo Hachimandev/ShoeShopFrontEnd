@@ -42,7 +42,7 @@ export default function ProfilePage() {
 
         // Gọi API lấy thông tin khách hàng
         try {
-          const customerInfo = await customerService.getCustomerInfo(username);
+          const customerInfo = await customerService.getCustomer(username);
           const userData = {
             username: username,
             fullName: customerInfo.fullName || "User Profile",
@@ -130,10 +130,34 @@ export default function ProfilePage() {
   };
 
   const handleSaveProfile = async () => {
+    const username = localStorage.getItem("username");
+    if (!username) return;
+
     setIsSaving(true);
     try {
-      setUser((prev) => (prev ? { ...prev, ...editForm } : null));
-      localStorage.setItem("user", JSON.stringify({ ...user, ...editForm }));
+      // Gọi API cập nhật thông tin trong database
+      const updatedCustomer = await customerService.updateCustomerInfo(username, {
+        fullName: editForm.fullName,
+        email: editForm.email,
+        phoneNumber: editForm.phone,
+        address: editForm.address,
+      });
+
+      const userData = {
+        username: username,
+        fullName: updatedCustomer.fullName || editForm.fullName,
+        email: updatedCustomer.email || editForm.email,
+        phone: updatedCustomer.phoneNumber || editForm.phone,
+        address: updatedCustomer.address || editForm.address,
+        role: user?.role || "Customer"
+      };
+
+      setUser(userData);
+      localStorage.setItem("user", JSON.stringify(userData));
+      
+      // Phát sự kiện để Header và các component liên quan cập nhật thông tin mới
+      window.dispatchEvent(new Event("auth-change"));
+
       setIsEditOpen(false);
     } catch (error) {
       console.error("Error saving profile:", error);
