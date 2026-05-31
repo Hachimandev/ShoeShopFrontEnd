@@ -39,8 +39,6 @@ export function CheckoutForm({
   };
   const paymentLabels: Record<string, string> = {
     [PaymentMethod.CASH]: "Thanh toán khi nhận hàng",
-    [PaymentMethod.CREDIT_CARD]: "Visa, Mastercard (Thẻ)",
-    [PaymentMethod.PAYPAL]: "PayPal (Ví điện tử)",
     [PaymentMethod.BANK_TRANSFER]: "Chuyển khoản ngân hàng",
   };
 

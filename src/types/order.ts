@@ -30,7 +30,7 @@ export interface OrderRequest {
     email: string;
     phoneNumber: string;
     address: string;
-    paymentMethod: "COD" | "CARD" | "EWALLET"; // Phải khớp với Enum Backend
+    paymentMethod: "COD" | "CARD" | "EWALLET" | "SEPAY"; // Phải khớp với Enum Backend
   };
   cart: Cart;
   totalAmount: number;
@@ -44,13 +44,12 @@ export interface OrderResponseDTO {
 
 export enum PaymentMethod {
   CASH = "CASH",
-  CREDIT_CARD = "CREDIT_CARD",
-  PAYPAL = "PAYPAL",
-  BANK_TRANSFER = "BANK_TRANSFER",
+  BANK_TRANSFER = "BANK_TRANSFER", // Sẽ map cái này sang SEPAY
 }
 
 export enum OrderStatus {
   PENDING = "PENDING",
+  PAID = "PAID",
   SHIPPING = "SHIPPING",
   DELIVERED = "DELIVERED",
   CANCELLED = "CANCELLED",
