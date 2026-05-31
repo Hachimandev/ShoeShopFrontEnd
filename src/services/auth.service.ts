@@ -58,6 +58,16 @@ export const authService = {
     return response.data;
   },
 
+  sendOtp: async (email: string): Promise<{ message: string }> => {
+    const response = await api.post<{ message: string }>("/auth/register/send-otp", { email });
+    return response.data;
+  },
+
+  verifyOtp: async (email: string, otp: string): Promise<{ message: string }> => {
+    const response = await api.post<{ message: string }>("/auth/register/verify-otp", { email, otp });
+    return response.data;
+  },
+
   logout: () => {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
