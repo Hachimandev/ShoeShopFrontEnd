@@ -14,7 +14,8 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { useEffect, useState, use } from "react";
+import { useEffect, useState, use, useRef } from "react";
+import axios from "axios";
 import { useRouter } from "next/navigation";
 import { productService } from "@/services/product.service";
 import { Product } from "@/types/product";
@@ -37,10 +38,12 @@ export default function ProductDetailPage({
   const [addToCartLoading, setAddToCartLoading] = useState(false);
 
   useEffect(() => {
+    const controller = new AbortController();
+
     const fetchProduct = async () => {
       try {
         if (id) {
-          const data = await productService.getProductById(id);
+          const data = await productService.getProductById(id, controller.signal);
           setProduct(data);
           // Set mặc định size và màu đầu tiên nếu có
           if (data.productDetails && data.productDetails.length > 0) {
@@ -49,13 +52,23 @@ export default function ProductDetailPage({
           }
         }
       } catch (error) {
+        if (axios.isCancel(error) || controller.signal.aborted) {
+          // Request was canceled, ignore
+          return;
+        }
         console.error("Failed to fetch product:", error);
       } finally {
-        setLoading(false);
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
       }
     };
 
     fetchProduct();
+
+    return () => {
+      controller.abort();
+    };
   }, [id]);
 
   if (loading) {

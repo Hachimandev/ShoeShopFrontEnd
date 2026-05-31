@@ -2,21 +2,24 @@ import api from "@/lib/api";
 import { Product } from "@/types/product";
 
 export const productService = {
-  getAllProducts: async (params?: {
-    searchTerm?: string;
-    category?: string;
-    brand?: string;
-    gender?: string;
-    minPrice?: number;
-    maxPrice?: number;
-    sort?: string;
-  }): Promise<Product[]> => {
-    const response = await api.get("/products", { params });
+  getAllProducts: async (
+    params?: {
+      searchTerm?: string;
+      category?: string;
+      brand?: string;
+      gender?: string;
+      minPrice?: number;
+      maxPrice?: number;
+      sort?: string;
+    },
+    signal?: AbortSignal
+  ): Promise<Product[]> => {
+    const response = await api.get("/products", { params, signal });
     return response.data;
   },
 
-  getProductById: async (id: string | number): Promise<Product> => {
-    const response = await api.get(`/products/${id}`);
+  getProductById: async (id: string | number, signal?: AbortSignal): Promise<Product> => {
+    const response = await api.get(`/products/${id}`, { signal });
     return response.data;
   },
 
