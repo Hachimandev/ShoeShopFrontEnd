@@ -6,8 +6,8 @@ export interface Category {
 }
 
 export const categoryService = {
-  getAllCategories: async (): Promise<Category[]> => {
-    const response = await api.get("/categories");
+  getAllCategories: async (signal?: AbortSignal): Promise<Category[]> => {
+    const response = await api.get("/categories", { signal });
     return response.data;
   },
 };

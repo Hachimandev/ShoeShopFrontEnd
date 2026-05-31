@@ -38,10 +38,10 @@ export function CartItem({ item }: CartItemProps) {
           Size: {item.size} | Color: {item.color}
         </p>
         <p className="text-lg font-bold text-gray-900 mt-2">
-          ${(item.price * item.quantity).toFixed(2)}
+          {(item.price * item.quantity).toLocaleString("vi-VN")} ₫
         </p>
         <p className="text-sm text-gray-500 mt-1">
-          Unit: ${item.price.toFixed(2)}
+          Đơn giá: {item.price.toLocaleString("vi-VN")} ₫
         </p>
       </div>
 

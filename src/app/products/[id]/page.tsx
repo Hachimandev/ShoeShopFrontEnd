@@ -14,7 +14,8 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { useEffect, useState, use } from "react";
+import { useEffect, useState, use, useRef } from "react";
+import axios from "axios";
 import { useRouter } from "next/navigation";
 import { productService } from "@/services/product.service";
 import { Product } from "@/types/product";
@@ -37,10 +38,12 @@ export default function ProductDetailPage({
   const [addToCartLoading, setAddToCartLoading] = useState(false);
 
   useEffect(() => {
+    const controller = new AbortController();
+
     const fetchProduct = async () => {
       try {
         if (id) {
-          const data = await productService.getProductById(id);
+          const data = await productService.getProductById(id, controller.signal);
           setProduct(data);
           // Set mặc định size và màu đầu tiên nếu có
           if (data.productDetails && data.productDetails.length > 0) {
@@ -49,13 +52,23 @@ export default function ProductDetailPage({
           }
         }
       } catch (error) {
+        if (axios.isCancel(error) || controller.signal.aborted) {
+          // Request was canceled, ignore
+          return;
+        }
         console.error("Failed to fetch product:", error);
       } finally {
-        setLoading(false);
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
       }
     };
 
     fetchProduct();
+
+    return () => {
+      controller.abort();
+    };
   }, [id]);
 
   if (loading) {
@@ -185,11 +198,11 @@ export default function ProductDetailPage({
               </h1>
               <div className="flex items-baseline gap-4">
                 <p className="text-4xl font-black text-primary">
-                  ${product.price?.toLocaleString()}.00
+                  {product.price?.toLocaleString("vi-VN")} ₫
                 </p>
                 {product.originalPrice && (
                   <p className="text-xl text-slate-400 line-through font-bold">
-                    ${product.originalPrice?.toLocaleString()}.00
+                    {product.originalPrice?.toLocaleString("vi-VN")} ₫
                   </p>
                 )}
               </div>
@@ -285,7 +298,7 @@ export default function ProductDetailPage({
               >
                 {addToCartLoading
                   ? "Adding..."
-                  : `ADD TO BAG — $${(product.price * quantity)?.toLocaleString()}.00`}
+                  : `THÊM VÀO GIỎ — ${(product.price * quantity)?.toLocaleString("vi-VN")} ₫`}
               </Button>
               <div className="flex items-center justify-center gap-2 text-sm font-bold text-green-600 py-2">
                 <div className="h-2 w-2 rounded-full bg-green-600 animate-pulse" />

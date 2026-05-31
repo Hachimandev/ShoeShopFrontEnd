@@ -58,6 +58,16 @@ export const authService = {
     return response.data;
   },
 
+  sendOtp: async (email: string): Promise<{ message: string }> => {
+    const response = await api.post<{ message: string }>("/auth/register/send-otp", { email });
+    return response.data;
+  },
+
+  verifyOtp: async (email: string, otp: string): Promise<{ message: string }> => {
+    const response = await api.post<{ message: string }>("/auth/register/verify-otp", { email, otp });
+    return response.data;
+  },
+
   logout: () => {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
@@ -91,6 +101,21 @@ export const authService = {
       `/accounts/change-password/${username}`,
       data,
     );
+    return response.data;
+  },
+
+  forgotPasswordSendOtp: async (email: string): Promise<{ message: string }> => {
+    const response = await api.post<{ message: string }>("/auth/forgot-password/send-otp", { email });
+    return response.data;
+  },
+
+  forgotPasswordVerifyOtp: async (email: string, otp: string): Promise<{ message: string }> => {
+    const response = await api.post<{ message: string }>("/auth/forgot-password/verify-otp", { email, otp });
+    return response.data;
+  },
+
+  forgotPasswordResetPassword: async (data: { email: string; password?: string; confirmPassword?: string }): Promise<{ message: string }> => {
+    const response = await api.post<{ message: string }>("/auth/forgot-password/reset-password", data);
     return response.data;
   },
 };

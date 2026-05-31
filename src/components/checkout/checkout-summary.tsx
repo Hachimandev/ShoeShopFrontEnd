@@ -36,21 +36,21 @@ export function CheckoutSummary({
       <div className="space-y-3 border-b border-slate-200 pb-4">
         <div className="flex justify-between text-sm text-slate-600">
           <span>Tạm tính</span>
-          <span>${cart.totalPrice.toFixed(2)}</span>
+          <span>{cart.totalPrice.toLocaleString("vi-VN")} ₫</span>
         </div>
         <div className="flex justify-between text-sm text-slate-600">
           <span>Phí vận chuyển</span>
-          <span>${shippingFee.toFixed(2)}</span>
+          <span>{shippingFee.toLocaleString("vi-VN")} ₫</span>
         </div>
         <div className="flex justify-between text-sm text-slate-600">
           <span>Thuế</span>
-          <span>${tax.toFixed(2)}</span>
+          <span>{tax.toLocaleString("vi-VN")} ₫</span>
         </div>
       </div>
 
       <div className="flex justify-between items-center text-lg font-bold">
         <span>Tổng cộng</span>
-        <span>${total.toFixed(2)}</span>
+        <span>{total.toLocaleString("vi-VN")} ₫</span>
       </div>
 
       {error ? (

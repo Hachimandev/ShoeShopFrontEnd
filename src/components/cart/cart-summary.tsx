@@ -7,7 +7,7 @@ import Link from "next/link";
 import { ShoppingBag } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-const SHIPPING_COST = 10;
+const SHIPPING_COST = 30000;
 const TAX_RATE = 0.1;
 
 export function CartSummary() {
@@ -27,22 +27,22 @@ export function CartSummary() {
         <div className="space-y-3 mb-6 pb-6 border-b">
           <div className="flex justify-between text-sm">
             <span className="text-gray-600">Subtotal</span>
-            <span className="font-medium">${subtotal.toFixed(2)}</span>
+            <span className="font-medium">{subtotal.toLocaleString("vi-VN")} ₫</span>
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-gray-600">Tax (10%)</span>
-            <span className="font-medium">${tax.toFixed(2)}</span>
+            <span className="font-medium">{tax.toLocaleString("vi-VN")} ₫</span>
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-gray-600">Shipping</span>
-            <span className="font-medium">${shipping.toFixed(2)}</span>
+            <span className="font-medium">{shipping.toLocaleString("vi-VN")} ₫</span>
           </div>
         </div>
 
         <div className="flex justify-between items-center mb-6">
           <span className="text-lg font-bold">Total</span>
           <span className="text-2xl font-bold text-blue-600">
-            ${total.toFixed(2)}
+            {total.toLocaleString("vi-VN")} ₫
           </span>
         </div>
 

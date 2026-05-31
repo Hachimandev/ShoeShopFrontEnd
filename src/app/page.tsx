@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronRight, Star, ShoppingBag, ShieldCheck, Truck, Headphones, RotateCcw, Zap } from "lucide-react";
+import { ChevronRight, ChevronLeft, Star, ShoppingBag, ShieldCheck, Truck, Headphones, RotateCcw, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { productService } from "@/services/product.service";
 import { Product } from "@/types/product";
 
@@ -34,13 +34,23 @@ const features = [
 export default function Home() {
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const carouselRef = useRef<HTMLDivElement>(null);
+
+  const scroll = (direction: 'left' | 'right') => {
+    if (carouselRef.current) {
+      const { scrollLeft, clientWidth } = carouselRef.current;
+      const scrollAmount = clientWidth * 0.75;
+      const scrollTo = direction === 'left' ? scrollLeft - scrollAmount : scrollLeft + scrollAmount;
+      carouselRef.current.scrollTo({ left: scrollTo, behavior: 'smooth' });
+    }
+  };
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const data = await productService.getAllProducts();
-        // Just take the first 3 for the featured section
-        setFeaturedProducts(data.slice(0, 3));
+        // Take the first 8 for the featured section to make it scrollable
+        setFeaturedProducts(data.slice(0, 8));
       } catch (error) {
         console.error("Failed to fetch products:", error);
       } finally {
@@ -119,7 +129,7 @@ export default function Home() {
                   className="object-cover rounded-[3rem] shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-700 hover:scale-[1.02]"
                   fill
                   sizes="(max-width: 768px) 100vw, 50vw"
-                  src="/login_picture.jpg"
+                  src="/landing_picture.png"
                   priority
                   loading="eager"
                 />
@@ -182,18 +192,45 @@ export default function Home() {
               <h2 className="text-primary font-bold tracking-widest uppercase text-sm">Trending Now</h2>
               <h3 className="text-3xl md:text-5xl font-black tracking-tight">Hottest Drops</h3>
             </div>
-            <Link href="/products">
-              <Button variant="outline" className="rounded-full bg-white hover:bg-slate-100 border-2">
-                View All Products <ChevronRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
+            <div className="flex items-center gap-4">
+              {/* Slider Buttons */}
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="rounded-full bg-white hover:bg-slate-100 border-2 h-11 w-11 flex items-center justify-center cursor-pointer"
+                  onClick={() => scroll('left')}
+                  aria-label="Scroll left"
+                >
+                  <ChevronLeft className="h-5 w-5 text-slate-800" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="rounded-full bg-white hover:bg-slate-100 border-2 h-11 w-11 flex items-center justify-center cursor-pointer"
+                  onClick={() => scroll('right')}
+                  aria-label="Scroll right"
+                >
+                  <ChevronRight className="h-5 w-5 text-slate-800" />
+                </Button>
+              </div>
+              <Link href="/products">
+                <Button variant="outline" className="rounded-full bg-white hover:bg-slate-100 border-2 px-6 h-11 text-sm font-bold">
+                  View All Products <ChevronRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div
+            ref={carouselRef}
+            className="flex gap-6 overflow-x-auto no-scrollbar pb-8 snap-x snap-mandatory scroll-smooth"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
             {isLoading ? (
               // Loading Skeletons
-              Array.from({ length: 3 }).map((_, i) => (
-                <div key={i} className="bg-white rounded-[2rem] p-4 h-[500px] animate-pulse shadow-sm">
+              Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="min-w-[280px] sm:min-w-[320px] md:min-w-[380px] bg-white rounded-[2rem] p-4 h-[500px] animate-pulse shadow-sm flex-shrink-0">
                   <div className="aspect-[4/5] rounded-3xl bg-slate-200 mb-6" />
                   <div className="h-6 bg-slate-200 rounded w-3/4 mb-3" />
                   <div className="h-4 bg-slate-200 rounded w-1/2" />
@@ -201,44 +238,44 @@ export default function Home() {
               ))
             ) : featuredProducts.length > 0 ? (
               featuredProducts.map((product, i) => (
-                <Link key={product.productId} href={`/products/${product.productId}`} className="group block">
-                  <div className="bg-white rounded-[2rem] p-4 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 border border-slate-100 h-full flex flex-col">
-                    <div className="aspect-[4/5] overflow-hidden rounded-3xl bg-slate-50 relative mb-6">
+                <Link key={product.productId} href={`/products/${product.productId}`} className="group block min-w-[280px] sm:min-w-[320px] md:min-w-[380px] snap-start flex-shrink-0">
+                  <div className="bg-white rounded-[2rem] p-4 transition-all duration-300 hover:shadow-2xl hover:shadow-primary/5 hover:-translate-y-1.5 border border-slate-100/60 shadow-sm h-full flex flex-col">
+                    <div className="aspect-[4/5] overflow-hidden rounded-3xl bg-gradient-to-br from-slate-50 to-slate-100/50 relative mb-6">
                       <Image
                         alt={product.productName || "Product"}
-                        className="object-cover transition-transform duration-700 group-hover:scale-110"
+                        className="object-cover transition-transform duration-700 group-hover:scale-105"
                         fill
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         src={product.image || "/login_picture.jpg"}
                         priority={i === 0}
                       />
-                      <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full shadow-sm">
-                        <span className="text-xs font-black tracking-wider uppercase text-slate-800">
+                      <div className="absolute top-4 left-4 bg-white/70 backdrop-blur-md px-3 py-1.5 rounded-full shadow-sm border border-white/40">
+                        <span className="text-[10px] font-black tracking-wider uppercase text-slate-700">
                           {typeof product.category === 'object' ? product.category?.categoryName : product.category}
                         </span>
                       </div>
-                      <div className="absolute bottom-4 right-4 translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                        <div className="bg-primary text-white p-3 rounded-full shadow-lg">
-                          <ShoppingBag className="h-6 w-6" />
+                      <div className="absolute bottom-4 right-4 translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                        <div className="bg-primary text-white p-3.5 rounded-2xl shadow-lg hover:scale-110 active:scale-95 transition-transform duration-200">
+                          <ShoppingBag className="h-5 w-5" />
                         </div>
                       </div>
                     </div>
 
                     <div className="px-2 flex flex-col flex-1">
                       <div className="flex items-center justify-between mb-2">
-                        <p className="text-sm font-bold text-slate-500">{product.brand}</p>
-                        <div className="flex items-center gap-1 text-yellow-500">
-                          <Star className="h-4 w-4 fill-current" />
-                          <span className="text-xs font-bold text-slate-700">{product.rating || "5.0"}</span>
+                        <p className="text-xs font-black text-slate-400 uppercase tracking-widest">{product.brand || "Premium Brand"}</p>
+                        <div className="flex items-center gap-1 bg-amber-50 text-amber-500 px-2 py-0.5 rounded-lg border border-amber-100/50">
+                          <Star className="h-3.5 w-3.5 fill-current" />
+                          <span className="text-[11px] font-bold text-slate-600">{product.rating || "5.0"}</span>
                         </div>
                       </div>
-                      <h3 className="font-black text-2xl leading-tight mb-4 group-hover:text-primary transition-colors">
+                      <h3 className="font-bold text-2xl leading-tight mb-4 group-hover:text-primary transition-colors text-slate-850 line-clamp-1">
                         {product.productName}
                       </h3>
-                      <div className="mt-auto flex items-end justify-between">
+                      <div className="mt-auto flex items-end justify-between pt-4 border-t border-slate-50">
                         <div>
-                          <p className="text-sm font-bold text-slate-400 mb-1">Price</p>
-                          <span className="font-black text-3xl text-slate-900">${product.price?.toLocaleString()}.00</span>
+                          <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-0.5">Price</p>
+                          <span className="font-black text-3xl text-slate-950">{product.price?.toLocaleString("vi-VN")} ₫</span>
                         </div>
                       </div>
                     </div>
@@ -247,7 +284,7 @@ export default function Home() {
               ))
             ) : (
               // Fallback if no products
-              <div className="col-span-full text-center py-20 bg-white rounded-3xl border border-dashed">
+              <div className="w-full text-center py-20 bg-white rounded-3xl border border-dashed">
                 <p className="text-slate-500">No products available at the moment.</p>
               </div>
             )}

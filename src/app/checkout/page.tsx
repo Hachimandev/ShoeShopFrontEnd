@@ -117,8 +117,8 @@ export default function CheckoutPage() {
     const fee =
       (cart?.items?.length || 0) > 0
         ? shippingMethod === "EXPRESS"
-          ? 25
-          : 10
+          ? 50000
+          : 30000
         : 0;
     const t = subtotal * 0.1;
     return { shippingFee: fee, tax: t, total: subtotal + fee + t };
@@ -164,15 +164,9 @@ export default function CheckoutPage() {
         .join(", ");
 
       // 5. Chuyển đổi Enum Frontend sang Enum Backend (QUAN TRỌNG)
-      // Dựa trên Enum bạn đã cung cấp: COD, CARD, EWALLET
-      let backendPaymentMethod: "COD" | "CARD" | "EWALLET" = "COD";
-      if (paymentMethod === PaymentMethod.CREDIT_CARD) {
-        backendPaymentMethod = "CARD";
-      } else if (
-        paymentMethod === PaymentMethod.PAYPAL ||
-        paymentMethod === PaymentMethod.BANK_TRANSFER
-      ) {
-        backendPaymentMethod = "EWALLET";
+      let backendPaymentMethod: "COD" | "CARD" | "EWALLET" | "SEPAY" = "COD";
+      if (paymentMethod === PaymentMethod.BANK_TRANSFER) {
+        backendPaymentMethod = "SEPAY";
       } else {
         backendPaymentMethod = "COD"; // Mặc định cho CASH
       }
@@ -208,7 +202,11 @@ export default function CheckoutPage() {
         // Xóa giỏ hàng và chuyển hướng
         clearCart();
         setTimeout(() => {
-          router.push("/profile/orders");
+          if (backendPaymentMethod === "SEPAY") {
+            router.push(`/order/${result.orderId}/payment`);
+          } else {
+            router.push("/profile/orders");
+          }
         }, 1600);
       }
     } catch (error: any) {

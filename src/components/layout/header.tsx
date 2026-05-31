@@ -47,7 +47,7 @@ export function Header() {
             if (Array.isArray(rolesArray) && rolesArray.length > 0) {
               parsedUser.role = rolesArray[0];
             }
-          } catch (e) {}
+          } catch (e) { }
         }
         setUser(parsedUser);
       } else {
@@ -78,46 +78,38 @@ export function Header() {
   };
 
   return (
-    <header className="px-4 lg:px-6 h-16 flex items-center border-b sticky top-0 bg-white/80 backdrop-blur-md z-50">
+    <header className="px-6 h-18 flex items-center border-b border-slate-100/80 sticky top-0 bg-white/75 backdrop-blur-xl z-50 transition-all duration-300">
       <Link
-        className="flex items-center justify-center font-bold text-2xl tracking-tighter"
+        className="flex items-center justify-center gap-2 group"
         href="/"
       >
-        <ShoppingBag className="mr-2 h-6 w-6" />
-        <span>SHOE SHOP</span>
+        <div className="bg-primary text-white p-2 rounded-2xl shadow-lg shadow-primary/20 group-hover:scale-110 transition-transform duration-300">
+          <ShoppingBag className="h-5 w-5" />
+        </div>
+        <span className="font-black text-xl tracking-tight bg-gradient-to-r from-primary to-indigo-600 bg-clip-text text-transparent">
+          SHOE SHOP
+        </span>
       </Link>
-      <nav className="ml-auto flex gap-4 sm:gap-6 items-center">
+      <nav className="ml-auto flex gap-6 sm:gap-8 items-center">
         <Link
-          className="text-base font-bold hover:text-primary transition-colors underline-offset-4"
+          className="text-sm font-bold text-slate-600 hover:text-primary transition-all relative py-1 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-primary after:transition-all"
           href="/products"
         >
-          Product
+          Products
         </Link>
         <Link
-          className="text-sm font-medium hover:underline underline-offset-4"
-          href="#"
-        >
-          New Arrivals
-        </Link>
-        <Link
-          className="text-sm font-medium hover:underline underline-offset-4"
-          href="#"
-        >
-          Sales
-        </Link>
-        <Link
-          className="text-sm font-medium hover:underline underline-offset-4 flex items-center gap-1 bg-gradient-to-r from-blue-400 to-blue-600 text-white px-3 py-1 rounded-full hover:no-underline hover:shadow-lg transition-all"
+          className="text-xs font-bold flex items-center gap-1.5 bg-gradient-to-r from-primary to-indigo-600 text-white px-4 py-2 rounded-full hover:shadow-lg hover:shadow-primary/10 hover:scale-105 active:scale-95 transition-all duration-300"
           href="/ai-chat"
         >
-          <Sparkles className="h-4 w-4" />
+          <Sparkles className="h-3.5 w-3.5" />
           <span>AI Chat</span>
         </Link>
 
         {/* Giỏ hàng */}
-        <Link href="/cart" className="relative group p-2">
-          <ShoppingCart className="h-6 w-6 group-hover:text-primary transition-colors" />
+        <Link href="/cart" className="relative group p-2 rounded-full hover:bg-slate-50 transition-colors duration-200">
+          <ShoppingCart className="h-5 w-5 text-slate-600 group-hover:text-primary transition-colors" />
           {cart.totalItems > 0 && (
-            <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-[10px] font-bold">
+            <Badge className="absolute -top-0.5 -right-0.5 h-4.5 w-4.5 flex items-center justify-center p-0 text-[9px] font-black bg-primary text-white border-2 border-white animate-pulse">
               {cart.totalItems}
             </Badge>
           )}
@@ -128,11 +120,11 @@ export function Header() {
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
-                className="relative h-10 w-10 rounded-full"
+                className="relative h-10 w-10 rounded-full border border-slate-100 hover:scale-105 active:scale-95 transition-transform"
               >
                 <Avatar className="h-10 w-10">
                   <AvatarImage src="" alt={user?.username || "User"} />
-                  <AvatarFallback className="bg-primary text-primary-foreground">
+                  <AvatarFallback className="bg-gradient-to-tr from-primary to-indigo-600 text-white font-black">
                     {(user?.fullName || user?.username || "U")
                       .substring(0, 1)
                       .toUpperCase()}
@@ -140,25 +132,25 @@ export function Header() {
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56" align="end" forceMount>
-              <DropdownMenuLabel className="font-normal">
+            <DropdownMenuContent className="w-56 mt-2 rounded-2xl p-2 border border-slate-100/80 shadow-xl" align="end" forceMount>
+              <DropdownMenuLabel className="font-normal px-2.5 py-2">
                 <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none">
+                  <p className="text-sm font-bold text-slate-800 leading-none">
                     {user?.fullName || user?.username}
                   </p>
-                  <p className="text-xs leading-none text-muted-foreground">
+                  <p className="text-xs leading-none text-slate-400">
                     @{user?.username}
                   </p>
                 </div>
               </DropdownMenuLabel>
-              <DropdownMenuSeparator />
+              <DropdownMenuSeparator className="my-1.5" />
               {user?.role?.includes("ADMIN") && (
                 <DropdownMenuItem asChild>
                   <Link
                     href="/admin"
-                    className="cursor-pointer w-full flex items-center"
+                    className="cursor-pointer w-full flex items-center px-2.5 py-2 rounded-xl text-sm font-medium hover:bg-slate-50 transition-colors"
                   >
-                    <LayoutDashboard className="mr-2 h-4 w-4" />
+                    <LayoutDashboard className="mr-2.5 h-4 w-4 text-slate-500" />
                     <span>Dashboard</span>
                   </Link>
                 </DropdownMenuItem>
@@ -166,27 +158,27 @@ export function Header() {
               <DropdownMenuItem asChild>
                 <Link
                   href="/profile"
-                  className="cursor-pointer w-full flex items-center"
+                  className="cursor-pointer w-full flex items-center px-2.5 py-2 rounded-xl text-sm font-medium hover:bg-slate-50 transition-colors"
                 >
-                  <User className="mr-2 h-4 w-4" />
+                  <User className="mr-2.5 h-4 w-4 text-slate-500" />
                   <span>Profile</span>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link
                   href="/settings"
-                  className="cursor-pointer w-full flex items-center"
+                  className="cursor-pointer w-full flex items-center px-2.5 py-2 rounded-xl text-sm font-medium hover:bg-slate-50 transition-colors"
                 >
-                  <Settings className="mr-2 h-4 w-4" />
+                  <Settings className="mr-2.5 h-4 w-4 text-slate-500" />
                   <span>Settings</span>
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuSeparator />
+              <DropdownMenuSeparator className="my-1.5" />
               <DropdownMenuItem
-                className="text-red-600 cursor-pointer focus:text-red-600"
+                className="text-rose-600 cursor-pointer focus:bg-rose-50 focus:text-rose-600 px-2.5 py-2 rounded-xl text-sm font-medium transition-colors"
                 onClick={handleLogout}
               >
-                <LogOut className="mr-2 h-4 w-4" />
+                <LogOut className="mr-2.5 h-4 w-4" />
                 <span>Log out</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -195,7 +187,7 @@ export function Header() {
           <Button
             asChild
             variant="default"
-            className="rounded-full px-6 font-bold"
+            className="rounded-full px-6 font-bold shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-transform"
           >
             <Link href="/auth/login">Login</Link>
           </Button>
