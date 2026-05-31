@@ -20,9 +20,7 @@ export function Footer() {
           <div>
             <h4 className="font-bold mb-4 text-white">Collections</h4>
             <ul className="space-y-2 text-sm text-slate-400">
-              <li><Link href="#">All Collection</Link></li>
-              <li><Link href="#">New Arrivals</Link></li>
-              <li><Link href="#">Sale</Link></li>
+              <li><Link href="/products">All Collection</Link></li>
             </ul>
           </div>
           <div>

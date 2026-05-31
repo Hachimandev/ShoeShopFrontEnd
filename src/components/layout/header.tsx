@@ -96,18 +96,6 @@ export function Header() {
           Product
         </Link>
         <Link
-          className="text-sm font-medium hover:underline underline-offset-4"
-          href="#"
-        >
-          New Arrivals
-        </Link>
-        <Link
-          className="text-sm font-medium hover:underline underline-offset-4"
-          href="#"
-        >
-          Sales
-        </Link>
-        <Link
           className="text-sm font-medium hover:underline underline-offset-4 flex items-center gap-1 bg-gradient-to-r from-blue-400 to-blue-600 text-white px-3 py-1 rounded-full hover:no-underline hover:shadow-lg transition-all"
           href="/ai-chat"
         >
