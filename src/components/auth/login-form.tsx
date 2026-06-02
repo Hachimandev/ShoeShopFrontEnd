@@ -12,7 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { authService } from "@/services/auth.service";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
@@ -27,6 +27,8 @@ export function LoginForm({
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,7 +36,7 @@ export function LoginForm({
     setLoading(true);
     try {
       await authService.login({ username, password });
-      router.push("/"); // Chuyển hướng sau khi đăng nhập thành công
+      router.push(redirect || "/"); // Chuyển hướng sau khi đăng nhập thành công
     } catch (err: unknown) {
       if (err && typeof err === "object" && "response" in err) {
         const response = (err as { response?: { data?: string } }).response;

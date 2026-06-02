@@ -269,13 +269,13 @@ export default function Home() {
                           <span className="text-[11px] font-bold text-slate-600">{product.rating || "5.0"}</span>
                         </div>
                       </div>
-                      <h3 className="font-bold text-2xl leading-tight mb-4 group-hover:text-primary transition-colors text-slate-850 line-clamp-1">
+                      <h3 className="font-bold text-lg leading-tight mb-4 group-hover:text-primary transition-colors text-slate-850 line-clamp-1">
                         {product.productName}
                       </h3>
                       <div className="mt-auto flex items-end justify-between pt-4 border-t border-slate-50">
                         <div>
                           <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-0.5">Price</p>
-                          <span className="font-black text-3xl text-slate-950">{product.price?.toLocaleString("vi-VN")} ₫</span>
+                          <span className="font-black text-xl text-slate-950">{product.price?.toLocaleString("vi-VN")} ₫</span>
                         </div>
                       </div>
                     </div>

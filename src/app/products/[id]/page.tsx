@@ -153,10 +153,10 @@ export default function ProductDetailPage({
         <div className="grid md:grid-cols-2 gap-12">
           {/* Left: Image Gallery */}
           <div className="space-y-6">
-            <div className="aspect-[4/5] relative overflow-hidden bg-white">
+            <div className="aspect-[4/5] relative overflow-hidden bg-slate-50 rounded-2xl group shadow-2xl shadow-slate-200/60 hover:shadow-slate-300/80 transition-shadow duration-500">
               <Image
                 alt={product.productName || product.name || ""}
-                className="object-contain"
+                className="object-cover transition-transform duration-500 group-hover:scale-105"
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
                 src={product.image || "/login_picture.jpg"}

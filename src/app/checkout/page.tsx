@@ -76,7 +76,10 @@ export default function CheckoutPage() {
 
       // 2. Lấy User để gọi API lấy ID
       const userJson = localStorage.getItem("user");
-      if (!userJson) return;
+      if (!userJson) {
+        router.push("/auth/login?redirect=/checkout");
+        return;
+      }
 
       try {
         const user = JSON.parse(userJson);
