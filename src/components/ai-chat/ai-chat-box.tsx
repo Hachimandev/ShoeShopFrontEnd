@@ -15,6 +15,20 @@ export const AIChatBox = () => {
   const [input, setInput] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+
+  useEffect(() => {
+    const checkAuth = () => {
+      const token = localStorage.getItem("token");
+      setIsAuthenticated(!!token);
+      setIsCheckingAuth(false);
+    };
+
+    checkAuth();
+    window.addEventListener("auth-change", checkAuth);
+    return () => window.removeEventListener("auth-change", checkAuth);
+  }, []);
 
   const scrollToBottom = () => {
     if (chatContainerRef.current) {
@@ -111,11 +125,30 @@ export const AIChatBox = () => {
       </div>
 
       {/* Messages Container */}
-      <div 
+      <div
         ref={chatContainerRef}
         className="flex-1 overflow-y-auto px-6 py-6 space-y-6 scrollbar-thin"
       >
-        {messages.length === 0 ? (
+        {isCheckingAuth ? (
+          <div className="flex flex-col items-center justify-center h-full">
+            <div className="w-8 h-8 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
+          </div>
+        ) : !isAuthenticated ? (
+          <div className="flex flex-col items-center justify-center h-full text-center max-w-sm mx-auto animate-in fade-in zoom-in duration-300">
+            <div className="bg-amber-50 p-5 rounded-3xl mb-4 text-amber-500 shadow-inner">
+              <Bot className="h-10 w-10" />
+            </div>
+            <p className="font-black text-xl text-slate-800 tracking-tight mb-2">Yêu cầu đăng nhập</p>
+            <p className="text-sm text-slate-500 mb-6 leading-relaxed font-medium">
+              Vui lòng đăng nhập vào tài khoản của bạn để sử dụng tính năng Trợ lý AI và tự động đặt hàng thông minh.
+            </p>
+            <Link href="/login">
+              <Button className="font-bold px-8 rounded-xl h-11 bg-gradient-to-r from-primary to-indigo-600 hover:from-primary/90 hover:to-indigo-600/90 text-white shadow-lg shadow-primary/20 hover:shadow-xl hover:-translate-y-0.5 transition-all">
+                Đăng nhập ngay
+              </Button>
+            </Link>
+          </div>
+        ) : messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center max-w-sm mx-auto">
             <div className="bg-primary/5 p-5 rounded-3xl mb-4 text-primary animate-pulse">
               <ShoppingCart className="h-10 w-10" />
@@ -144,32 +177,34 @@ export const AIChatBox = () => {
       </div>
 
       {/* Input Area */}
-      <div className="border-t border-slate-100 p-4.5 bg-slate-50/50 backdrop-blur-md">
-        <form onSubmit={handleSendMessage} className="flex gap-2.5">
-          <Input
-            ref={inputRef}
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder={getPlaceholder()}
-            disabled={isLoading}
-            className="flex-1 h-12 px-4 rounded-2xl bg-white border border-slate-200 focus:ring-2 focus:ring-primary focus:border-transparent text-sm font-medium"
-          />
-          <Button
-            type="submit"
-            disabled={isLoading || !input.trim()}
-            className="h-12 w-12 rounded-2xl bg-primary text-white shadow-lg shadow-primary/10 hover:scale-105 active:scale-95 transition-transform shrink-0 p-0"
-          >
-            <Send className="w-4.5 h-4.5" />
-          </Button>
-        </form>
-        <div className="text-[10px] text-slate-400 mt-2.5 flex items-center gap-1.5 font-semibold tracking-wide uppercase px-1">
-          <Lightbulb className="h-3.5 w-3.5 text-amber-500 fill-amber-500/10" />
-          <span>
-            Gợi ý: &quot;Tìm giày Adidas màu đen&quot; hoặc &quot;Tạo đơn hàng này&quot;
-          </span>
+      {isAuthenticated && !isCheckingAuth && (
+        <div className="border-t border-slate-100 p-4.5 bg-slate-50/50 backdrop-blur-md">
+          <form onSubmit={handleSendMessage} className="flex gap-2.5">
+            <Input
+              ref={inputRef}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder={getPlaceholder()}
+              disabled={isLoading}
+              className="flex-1 h-12 px-4 rounded-2xl bg-white border border-slate-200 focus:ring-2 focus:ring-primary focus:border-transparent text-sm font-medium"
+            />
+            <Button
+              type="submit"
+              disabled={isLoading || !input.trim()}
+              className="h-12 w-12 rounded-2xl bg-primary text-white shadow-lg shadow-primary/10 hover:scale-105 active:scale-95 transition-transform shrink-0 p-0"
+            >
+              <Send className="w-4.5 h-4.5" />
+            </Button>
+          </form>
+          <div className="text-[10px] text-slate-400 mt-2.5 flex items-center gap-1.5 font-semibold tracking-wide uppercase px-1">
+            <Lightbulb className="h-3.5 w-3.5 text-amber-500 fill-amber-500/10" />
+            <span>
+              Gợi ý: &quot;Tìm giày Adidas màu đen&quot; hoặc &quot;Tạo đơn hàng này&quot;
+            </span>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
