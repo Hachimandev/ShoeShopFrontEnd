@@ -10,10 +10,24 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 
 export const AIChatBox = () => {
-  const { messages, isLoading, sendMessage, clearChat, messagesEndRef } =
+  const { messages, isLoading, sendMessage, clearChat } =
     useAIChat();
   const [input, setInput] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      scrollToBottom();
+    }, 50);
+    return () => clearTimeout(timer);
+  }, [messages, isLoading]);
 
   // Get last order step from messages
   const getLastOrderStep = () => {
@@ -27,15 +41,30 @@ export const AIChatBox = () => {
   };
 
   const getPlaceholder = () => {
-    const lastStep = getLastOrderStep();
-    switch (lastStep) {
-      case "ASKING_FOR_ADDRESS":
-        return "Nhập địa chỉ và số điện thoại (ví dụ: Địa chỉ: 123 Đường ABC, SĐT: 0123456789)";
-      case "ASKING_FOR_CONFIRMATION":
-        return "Xác nhận đặt hàng (gõ: có/không)";
-      default:
-        return "Bạn muốn tìm giày như thế nào?";
+    // Find the last assistant message that has an orderStep
+    let lastAssistantMsg: ChatMessage | null = null;
+    for (let i = messages.length - 1; i >= 0; i--) {
+      if (messages[i].role === "assistant") {
+        lastAssistantMsg = messages[i];
+        break;
+      }
     }
+
+    const lastStep = lastAssistantMsg?.metadata?.orderStep;
+    if (lastStep === "ASKING_FOR_ADDRESS" && lastAssistantMsg) {
+      const content = lastAssistantMsg.content.toLowerCase();
+      if (content.includes("địa chỉ và số điện thoại")) {
+        return "Nhập địa chỉ và số điện thoại của bạn (ví dụ: Địa chỉ: 123 Đường A, SĐT: 0789...)";
+      } else if (content.includes("địa chỉ")) {
+        return "Nhập địa chỉ nhận hàng của bạn...";
+      } else if (content.includes("số điện thoại")) {
+        return "Nhập số điện thoại của bạn...";
+      }
+      return "Nhập thông tin giao hàng...";
+    } else if (lastStep === "ASKING_FOR_CONFIRMATION") {
+      return "Xác nhận đặt hàng (gõ 'có' hoặc 'không')...";
+    }
+    return "Bạn muốn tìm giày thế nào? (ví dụ: Nike dưới 20000 ₫)";
   };
 
   const handleSendMessage = (e: React.FormEvent<HTMLFormElement>) => {
@@ -82,7 +111,10 @@ export const AIChatBox = () => {
       </div>
 
       {/* Messages Container */}
-      <div className="flex-1 overflow-y-auto px-6 py-6 space-y-6 scrollbar-thin">
+      <div 
+        ref={chatContainerRef}
+        className="flex-1 overflow-y-auto px-6 py-6 space-y-6 scrollbar-thin"
+      >
         {messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center max-w-sm mx-auto">
             <div className="bg-primary/5 p-5 rounded-3xl mb-4 text-primary animate-pulse">
@@ -109,7 +141,6 @@ export const AIChatBox = () => {
             </div>
           </div>
         )}
-        <div ref={messagesEndRef} />
       </div>
 
       {/* Input Area */}
@@ -120,7 +151,7 @@ export const AIChatBox = () => {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Bạn muốn tìm giày thế nào? (vd: Nike dưới $150)"
+            placeholder={getPlaceholder()}
             disabled={isLoading}
             className="flex-1 h-12 px-4 rounded-2xl bg-white border border-slate-200 focus:ring-2 focus:ring-primary focus:border-transparent text-sm font-medium"
           />
@@ -180,7 +211,7 @@ const MessageBubble = ({ message }: { message: ChatMessage }) => {
                   >
                     <div className="flex justify-between items-start gap-2">
                       <p className="font-bold text-xs line-clamp-1">{product.name}</p>
-                      <span className="font-black text-xs shrink-0">${product.price}</span>
+                      <span className="font-black text-xs shrink-0">{product.price.toLocaleString("vi-VN")} ₫</span>
                     </div>
                     {product.relevanceScore && (
                       <div className="flex items-center gap-1 mt-1 text-[9px] font-black uppercase tracking-wider opacity-75">
@@ -205,7 +236,16 @@ const MessageBubble = ({ message }: { message: ChatMessage }) => {
             </div>
             <div className="space-y-1 text-[11px] font-medium text-emerald-600">
               <p>Mã đơn hàng: <strong className="font-bold text-emerald-800">{message.metadata.orderCreated.orderId}</strong></p>
-              <p>Tổng thanh toán: <strong className="font-bold text-emerald-800">{message.metadata.orderCreated.totalAmount}</strong></p>
+              <p>Tổng thanh toán: <strong className="font-bold text-emerald-800">{(message.metadata.orderCreated.totalAmount).toLocaleString("vi-VN")} ₫</strong></p>
+              {message.metadata.orderCreated.orderLink && (
+                <div className="mt-3">
+                  <Link href={message.metadata.orderCreated.orderLink}>
+                    <Button size="sm" className="w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl py-1 text-xs font-bold transition-all duration-200">
+                      {message.metadata.orderCreated.orderLink.includes("/payment") ? "Thanh toán qua SePay ngay" : "Xem đơn hàng"}
+                    </Button>
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         )}
