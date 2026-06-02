@@ -34,23 +34,15 @@ const features = [
 export default function Home() {
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const carouselRef = useRef<HTMLDivElement>(null);
+  const [activeCategory, setActiveCategory] = useState<string>("All");
 
-  const scroll = (direction: 'left' | 'right') => {
-    if (carouselRef.current) {
-      const { scrollLeft, clientWidth } = carouselRef.current;
-      const scrollAmount = clientWidth * 0.75;
-      const scrollTo = direction === 'left' ? scrollLeft - scrollAmount : scrollLeft + scrollAmount;
-      carouselRef.current.scrollTo({ left: scrollTo, behavior: 'smooth' });
-    }
-  };
+
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const data = await productService.getAllProducts();
-        // Take the first 8 for the featured section to make it scrollable
-        setFeaturedProducts(data.slice(0, 8));
+        setFeaturedProducts(data.slice(0, 24)); // fetch more for filtering
       } catch (error) {
         console.error("Failed to fetch products:", error);
       } finally {
@@ -59,6 +51,16 @@ export default function Home() {
     };
     fetchProducts();
   }, []);
+
+  const displayedProducts = activeCategory === "All" 
+    ? featuredProducts 
+    : featuredProducts.filter(p => {
+        const catName = typeof p.category === 'object' ? p.category?.categoryName : p.category;
+        return catName === activeCategory;
+      });
+
+  // Limit to 8 products max per tab to keep the UI clean
+  const tabProducts = displayedProducts.slice(0, 8);
 
   return (
     <main className="flex-1 flex flex-col w-full overflow-hidden">
@@ -187,58 +189,38 @@ export default function Home() {
       {/* Featured Products */}
       <section className="w-full py-24 bg-slate-50">
         <div className="container px-4 md:px-6 mx-auto">
-          <div className="flex flex-col md:flex-row items-end justify-between mb-12 gap-6">
+          <div className="flex flex-col xl:flex-row items-start xl:items-end justify-between mb-12 gap-8">
             <div className="space-y-4 max-w-2xl">
-              <h2 className="text-primary font-bold tracking-widest uppercase text-sm">Trending Now</h2>
-              <h3 className="text-3xl md:text-5xl font-black tracking-tight">Hottest Drops</h3>
+              <h2 className="text-primary font-bold tracking-widest uppercase text-sm">Shop by Need</h2>
+              <h3 className="text-3xl md:text-5xl font-black tracking-tight">Find Your Perfect Fit</h3>
             </div>
-            <div className="flex items-center gap-4">
-              {/* Slider Buttons */}
-              <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="rounded-full bg-white hover:bg-slate-100 border-2 h-11 w-11 flex items-center justify-center cursor-pointer"
-                  onClick={() => scroll('left')}
-                  aria-label="Scroll left"
+            
+            <div className="flex items-center gap-3 overflow-x-auto no-scrollbar pb-2 w-full xl:w-auto">
+              {["All", "Lifestyle", "Running", "Basketball", "Training"].map(cat => (
+                <Button 
+                  key={cat}
+                  variant={activeCategory === cat ? "default" : "outline"}
+                  className={`rounded-full px-6 h-11 font-bold whitespace-nowrap transition-all duration-300 ${activeCategory !== cat ? 'bg-white border-2 text-slate-600 hover:text-slate-900 hover:bg-slate-50' : 'shadow-lg shadow-primary/30 scale-105'}`}
+                  onClick={() => setActiveCategory(cat)}
                 >
-                  <ChevronLeft className="h-5 w-5 text-slate-800" />
+                  {cat}
                 </Button>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="rounded-full bg-white hover:bg-slate-100 border-2 h-11 w-11 flex items-center justify-center cursor-pointer"
-                  onClick={() => scroll('right')}
-                  aria-label="Scroll right"
-                >
-                  <ChevronRight className="h-5 w-5 text-slate-800" />
-                </Button>
-              </div>
-              <Link href="/products">
-                <Button variant="outline" className="rounded-full bg-white hover:bg-slate-100 border-2 px-6 h-11 text-sm font-bold">
-                  View All Products <ChevronRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
+              ))}
             </div>
           </div>
 
-          <div
-            ref={carouselRef}
-            className="flex gap-6 overflow-x-auto no-scrollbar pb-8 snap-x snap-mandatory scroll-smooth"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-          >
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
             {isLoading ? (
-              // Loading Skeletons
-              Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="min-w-[280px] sm:min-w-[320px] md:min-w-[380px] bg-white rounded-[2rem] p-4 h-[500px] animate-pulse shadow-sm flex-shrink-0">
-                  <div className="aspect-[4/5] rounded-3xl bg-slate-200 mb-6" />
-                  <div className="h-6 bg-slate-200 rounded w-3/4 mb-3" />
-                  <div className="h-4 bg-slate-200 rounded w-1/2" />
+              Array.from({ length: 8 }).map((_, i) => (
+                <div key={i} className="bg-white rounded-[2rem] p-4 h-[420px] animate-pulse shadow-sm border border-slate-100">
+                  <div className="aspect-[4/5] rounded-3xl bg-slate-100 mb-6" />
+                  <div className="h-6 bg-slate-100 rounded w-3/4 mb-3" />
+                  <div className="h-4 bg-slate-100 rounded w-1/2" />
                 </div>
               ))
-            ) : featuredProducts.length > 0 ? (
-              featuredProducts.map((product, i) => (
-                <Link key={product.productId} href={`/products/${product.productId}`} className="group block min-w-[280px] sm:min-w-[320px] md:min-w-[380px] snap-start flex-shrink-0">
+            ) : tabProducts.length > 0 ? (
+              tabProducts.map((product, i) => (
+                <Link key={product.productId} href={`/products/${product.productId}`} className="group block">
                   <div className="bg-white rounded-[2rem] p-4 transition-all duration-300 hover:shadow-2xl hover:shadow-primary/5 hover:-translate-y-1.5 border border-slate-100/60 shadow-sm h-full flex flex-col">
                     <div className="aspect-[4/5] overflow-hidden rounded-3xl bg-gradient-to-br from-slate-50 to-slate-100/50 relative mb-6">
                       <Image
@@ -269,13 +251,13 @@ export default function Home() {
                           <span className="text-[11px] font-bold text-slate-600">{product.rating || "5.0"}</span>
                         </div>
                       </div>
-                      <h3 className="font-bold text-2xl leading-tight mb-4 group-hover:text-primary transition-colors text-slate-850 line-clamp-1">
+                      <h3 className="font-bold text-lg leading-tight mb-4 group-hover:text-primary transition-colors text-slate-850 line-clamp-1">
                         {product.productName}
                       </h3>
                       <div className="mt-auto flex items-end justify-between pt-4 border-t border-slate-50">
                         <div>
                           <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-0.5">Price</p>
-                          <span className="font-black text-3xl text-slate-950">{product.price?.toLocaleString("vi-VN")} ₫</span>
+                          <span className="font-black text-xl text-slate-950">{product.price?.toLocaleString("vi-VN")} ₫</span>
                         </div>
                       </div>
                     </div>
@@ -284,10 +266,20 @@ export default function Home() {
               ))
             ) : (
               // Fallback if no products
-              <div className="w-full text-center py-20 bg-white rounded-3xl border border-dashed">
-                <p className="text-slate-500">No products available at the moment.</p>
+              <div className="col-span-full w-full text-center py-20 bg-white rounded-[3rem] border border-dashed border-slate-200 shadow-sm">
+                <ShoppingBag className="h-16 w-16 text-slate-200 mx-auto mb-4" />
+                <h3 className="text-xl font-bold text-slate-700 mb-2">No Products Found</h3>
+                <p className="text-slate-500">We couldn't find any products in this category.</p>
               </div>
             )}
+          </div>
+
+          <div className="mt-12 flex justify-center">
+            <Link href="/products">
+              <Button size="lg" className="px-10 h-14 text-lg rounded-full shadow-xl shadow-primary/20 hover:scale-105 transition-transform font-bold group">
+                View Entire Collection <ChevronRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </Link>
           </div>
         </div>
       </section>

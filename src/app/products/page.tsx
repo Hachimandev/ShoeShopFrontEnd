@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ShoppingBag, Filter, ChevronDown, Star, Search, X } from "lucide-react";
+import { ShoppingBag, Filter, ChevronDown, Star, Search, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
@@ -16,6 +16,10 @@ export default function ProductsPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 8;
 
   // Filter States
   const [selectedCategory, setSelectedCategory] = useState<string>("");
@@ -137,6 +141,7 @@ export default function ProductsPage() {
       maxPrice,
       sort: sortBy || undefined
     });
+    setCurrentPage(1);
     setShowMobileFilters(false);
   };
 
@@ -148,6 +153,7 @@ export default function ProductsPage() {
     setMaxPriceInput("");
     setSortBy("");
     setSearchTerm("");
+    setCurrentPage(1);
 
     fetchProducts();
     setShowMobileFilters(false);
@@ -195,6 +201,7 @@ export default function ProductsPage() {
         maxPrice,
         sort: sortBy || undefined
       });
+      setCurrentPage(1);
     }, 500);
   };
 
@@ -327,6 +334,9 @@ export default function ProductsPage() {
     </div>
   );
 
+  const totalPages = Math.ceil(products.length / ITEMS_PER_PAGE);
+  const currentProducts = products.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+
   return (
     <div className="flex flex-col min-h-screen bg-slate-50">
       <main className="flex-1 container px-4 py-8 mx-auto">
@@ -336,7 +346,7 @@ export default function ProductsPage() {
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Our Collection</h1>
             <p className="text-muted-foreground">
-              {loading ? "Loading..." : `Showing ${products.length} distinctive styles`}
+              {loading ? "Loading..." : `Showing ${currentProducts.length} of ${products.length} distinctive styles`}
             </p>
           </div>
 
@@ -368,7 +378,7 @@ export default function ProductsPage() {
           </aside>
 
           {/* Product Grid container */}
-          <div className="flex-1 w-full">
+          <div className="flex-1 w-full flex flex-col">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {loading ? (
                 // Skeleton Loading
@@ -393,7 +403,7 @@ export default function ProductsPage() {
                   <Button onClick={handleResetFilters}>Đặt lại bộ lọc</Button>
                 </div>
               ) : (
-                products.map((product) => (
+                currentProducts.map((product) => (
                   <Link
                     key={product.productId || product.id}
                     href={`/products/${product.productId || product.id}`}
@@ -449,6 +459,49 @@ export default function ProductsPage() {
                 ))
               )}
             </div>
+
+            {/* Pagination Controls */}
+            {!loading && totalPages > 1 && (
+              <div className="mt-12 mb-4 flex justify-center items-center gap-2">
+                <Button 
+                  variant="outline" 
+                  disabled={currentPage === 1}
+                  onClick={() => {
+                    setCurrentPage(prev => Math.max(1, prev - 1));
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  className="h-10 w-10 p-0 rounded-xl"
+                >
+                  <ChevronLeft className="h-5 w-5" />
+                </Button>
+                
+                {Array.from({ length: totalPages }).map((_, i) => (
+                  <Button
+                    key={i}
+                    variant={currentPage === i + 1 ? "default" : "outline"}
+                    onClick={() => {
+                      setCurrentPage(i + 1);
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className={`h-10 w-10 p-0 rounded-xl font-bold ${currentPage === i + 1 ? 'shadow-md shadow-primary/20' : ''}`}
+                  >
+                    {i + 1}
+                  </Button>
+                ))}
+
+                <Button 
+                  variant="outline" 
+                  disabled={currentPage === totalPages}
+                  onClick={() => {
+                    setCurrentPage(prev => Math.min(totalPages, prev + 1));
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  className="h-10 w-10 p-0 rounded-xl"
+                >
+                  <ChevronRight className="h-5 w-5" />
+                </Button>
+              </div>
+            )}
           </div>
 
         </div>

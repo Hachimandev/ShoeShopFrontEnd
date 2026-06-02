@@ -2,16 +2,21 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { use } from "react";
 import Image from "next/image";
 import { orderService } from "@/services/order.service";
 import { Order, OrderStatus } from "@/types/order";
 import { Button } from "@/components/ui/button";
 import { Loader2, CheckCircle2, AlertCircle } from "lucide-react";
 
-export default function PaymentPage() {
-  const params = useParams();
+export default function PaymentPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const router = useRouter();
-  const orderId = params.id as string;
+  const resolvedParams = use(params);
+  const orderId = resolvedParams.id;
 
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
@@ -88,7 +93,7 @@ export default function PaymentPage() {
     );
   }
 
-  const qrUrl = `https://qr.sepay.vn/img?bank=${bankName}&acc=${accountNumber}&template=compact&amount=${order.totalAmount}&des=${orderId}`;
+  const qrUrl = `https://qr.sepay.vn/img?bank=${bankName}&acc=${accountNumber}&template=compact&amount=${order.totalAmount}&des=${encodeURIComponent(orderId)}`;
 
   return (
     <main className="min-h-screen bg-slate-50 py-12">
