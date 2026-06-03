@@ -12,7 +12,9 @@ export function filterOrdersByTab(
     switch (tab) {
       case "pending":
         return (
-          s === OrderStatus.PENDING || s === OrderStatus.AWAITING_CANCELLATION
+          s === OrderStatus.PENDING ||
+          s === OrderStatus.AWAITING_CANCELLATION ||
+          s === OrderStatus.PAID
         );
       case "shipping":
         return s === OrderStatus.SHIPPING;
@@ -30,6 +32,8 @@ export function orderStatusLabelVi(status: OrderStatus): string {
   switch (status) {
     case OrderStatus.PENDING:
       return "Chờ xác nhận";
+    case OrderStatus.PAID:
+      return "Đã thanh toán";
     case OrderStatus.AWAITING_CANCELLATION:
       return "Chờ xác nhận hủy";
     case OrderStatus.SHIPPING:
