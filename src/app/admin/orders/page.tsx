@@ -37,6 +37,7 @@ function formatVnd(n: number): string {
 const statusOptions = [
   { value: "all", label: "Tất cả trạng thái" },
   { value: OrderStatus.PENDING, label: "Chờ xử lý" },
+  { value: OrderStatus.PAID, label: "Đã thanh toán" },
   { value: OrderStatus.SHIPPING, label: "Đang giao hàng" },
   { value: OrderStatus.DELIVERED, label: "Đã giao hàng" },
   { value: OrderStatus.CANCELLED, label: "Đã hủy" },
@@ -86,6 +87,8 @@ export default function AdminOrdersPage() {
     switch (status) {
       case OrderStatus.PENDING:
         return { label: "Chờ xử lý", class: "bg-amber-100 text-amber-700 border-amber-200" };
+      case OrderStatus.PAID:
+        return { label: "Đã thanh toán", class: "bg-teal-100 text-teal-700 border-teal-200" };
       case OrderStatus.SHIPPING:
         return { label: "Đang giao", class: "bg-blue-100 text-blue-700 border-blue-200" };
       case OrderStatus.DELIVERED:
