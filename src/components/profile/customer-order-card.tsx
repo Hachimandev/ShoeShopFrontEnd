@@ -42,6 +42,8 @@ export function CustomerOrderCard({
     const s = order.orderStatus;
     if (s === OrderStatus.PENDING)
       return "bg-amber-100 text-amber-900 border-0";
+    if (s === OrderStatus.PAID)
+      return "bg-teal-100 text-teal-900 border-0";
     if (s === OrderStatus.AWAITING_CANCELLATION)
       return "bg-orange-100 text-orange-900 border-0";
     if (s === OrderStatus.SHIPPING) return "bg-sky-100 text-sky-800 border-0";
@@ -147,6 +149,20 @@ export function CustomerOrderCard({
               </p>
             </div>
           )}
+
+        {tab === "pending" && order.orderStatus === OrderStatus.PAID && (
+          <div className="flex flex-wrap gap-2 border-t border-slate-100 pt-4">
+            <Button
+              asChild
+              className="flex-1 bg-primary text-white hover:bg-primary/90"
+            >
+              <Link href={`/profile/orders/${order.orderId}`}>
+                Xem chi tiết
+                <ChevronRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
+        )}
 
         {tab === "shipping" && (
           <div className="flex flex-wrap gap-2 border-t border-slate-100 pt-4">
