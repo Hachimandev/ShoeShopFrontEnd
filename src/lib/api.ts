@@ -28,7 +28,10 @@ api.interceptors.request.use(
 
       // Check client-side rate limit/throttle for POST requests
       const requestKey = `${config.method}:${config.url}`;
-      if (config.method === "post" && (config.url?.includes("/checkout") || config.url?.includes("/ai"))) {
+      if (
+        config.method === "post" &&
+        (config.url?.includes("/checkout") || config.url?.includes("/ai"))
+      ) {
         const now = Date.now();
         const lastTime = lastRequestTimes[requestKey] || 0;
         if (now - lastTime < MIN_REQUEST_INTERVAL) {
@@ -68,7 +71,8 @@ api.interceptors.response.use(
 
     // Check if we should retry: Network Error or Server Unavailable (503, 504)
     const isNetworkError = !response;
-    const isServerError = response && (response.status === 503 || response.status === 504);
+    const isServerError =
+      response && (response.status === 503 || response.status === 504);
 
     if (config && (isNetworkError || isServerError)) {
       const customConfig = config as CustomAxiosRequestConfig;
@@ -78,7 +82,7 @@ api.interceptors.response.use(
         customConfig._retryCount += 1;
         console.warn(
           `[API] Request failed. Retrying attempt ${customConfig._retryCount} in ${RETRY_DELAY_MS / 1000}s...`,
-          error.message
+          error.message,
         );
 
         // Wait for 3 seconds before retrying

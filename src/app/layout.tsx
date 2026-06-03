@@ -4,6 +4,7 @@ import "./globals.css";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { CartProvider } from "@/context/cart.context";
+import { Toaster } from "sonner";
 
 const plusJakarta = Plus_Jakarta_Sans({
   variable: "--font-sans",
@@ -26,11 +27,39 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${plusJakarta.variable} font-sans bg-white text-slate-900 antialiased`}
     >
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  const theme = localStorage.getItem('app-theme') || 'light';
+                  if (theme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                  } else {
+                    document.documentElement.classList.remove('dark');
+                  }
+                  
+                  const fontSize = localStorage.getItem('app-font-size') || 'medium';
+                  if (fontSize === 'small') {
+                    document.documentElement.style.fontSize = '14px';
+                  } else if (fontSize === 'large') {
+                    document.documentElement.style.fontSize = '18px';
+                  } else {
+                    document.documentElement.style.fontSize = '16px';
+                  }
+                } catch (e) {}
+              })()
+            `,
+          }}
+        />
+      </head>
       <body className="min-h-full flex flex-col">
         <CartProvider>
           <Header />
           {children}
           <Footer />
+          <Toaster richColors position="top-right" />
         </CartProvider>
       </body>
     </html>

@@ -163,40 +163,11 @@ export default function AdminSuppliersPage() {
   };
 
   const handleDeleteOne = async (id: string) => {
-    if (!confirm("Xóa nhà cung cấp này?")) return;
-    try {
-      setDeletingId(id);
-      await supplierService.deleteSupplier(id);
-      setSelectedIds((prev) => {
-        const next = new Set(prev);
-        next.delete(id);
-        return next;
-      });
-      await loadData();
-    } catch (e) {
-      console.error(e);
-      alert("Không xóa được.");
-    } finally {
-      setDeletingId(null);
-    }
+    alert("Chức năng xóa nhà cung cấp đã bị vô hiệu hóa để bảo đảm tính toàn vẹn dữ liệu.");
   };
 
   const handleBulkDelete = async () => {
-    if (selectedIds.size === 0) return;
-    if (!confirm(`Xóa ${selectedIds.size} nhà cung cấp đã chọn?`)) return;
-    try {
-      setBulkDeleting(true);
-      await Promise.all(
-        [...selectedIds].map((id) => supplierService.deleteSupplier(id)),
-      );
-      setSelectedIds(new Set());
-      await loadData();
-    } catch (e) {
-      console.error(e);
-      alert("Một số bản ghi không xóa được.");
-    } finally {
-      setBulkDeleting(false);
-    }
+    alert("Chức năng xóa nhà cung cấp đã bị vô hiệu hóa để bảo đảm tính toàn vẹn dữ liệu.");
   };
 
   const handleExport = async () => {

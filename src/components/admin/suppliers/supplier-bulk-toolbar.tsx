@@ -23,16 +23,6 @@ export function SupplierBulkToolbar({
           type="button"
           variant="outline"
           size="sm"
-          className="border-red-200 bg-white text-red-700 hover:bg-red-50"
-          disabled={deleting}
-          onClick={onBulkDelete}
-        >
-          Xóa
-        </Button>
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
           className="border-slate-200 bg-white text-slate-400"
           disabled
           title="Backend hiện chưa có trường trạng thái — chỉ hiển thị UI"
