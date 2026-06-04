@@ -18,6 +18,9 @@ interface AxiosErrorShape {
  */
 export function extractErrorMessage(data: unknown, fallback: string): string {
   if (typeof data === "string" && data.trim().length > 0) {
+    if (data.trim().toLowerCase().startsWith("<!doctype html") || data.includes("<html")) {
+      return fallback;
+    }
     return data;
   }
   if (data && typeof data === "object") {

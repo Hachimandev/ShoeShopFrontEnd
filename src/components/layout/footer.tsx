@@ -1,9 +1,18 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ShoppingBag } from "lucide-react";
 
 export function Footer() {
+  const pathname = usePathname();
+
+  if (pathname?.startsWith("/auth")) {
+    return null;
+  }
+
   return (
     <footer className="w-full py-12 bg-slate-900 border-t">
       <div className="container px-4 md:px-6 mx-auto text-left">

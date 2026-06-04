@@ -142,7 +142,7 @@ export const AIChatBox = () => {
             <p className="text-sm text-slate-500 dark:text-slate-400 mb-6 leading-relaxed font-medium">
               Vui lòng đăng nhập vào tài khoản của bạn để sử dụng tính năng Trợ lý AI và tự động đặt hàng thông minh.
             </p>
-            <Link href="/login">
+            <Link href="/auth/login">
               <Button className="font-bold px-8 rounded-xl h-11 bg-gradient-to-r from-primary to-indigo-600 hover:from-primary/90 hover:to-indigo-600/90 text-white shadow-lg shadow-primary/20 hover:shadow-xl hover:-translate-y-0.5 transition-all">
                 Đăng nhập ngay
               </Button>
