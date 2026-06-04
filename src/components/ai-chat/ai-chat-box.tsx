@@ -104,7 +104,7 @@ export const AIChatBox = () => {
   }, []);
 
   return (
-    <div className="flex flex-col h-[600px] bg-white/90 backdrop-blur-md rounded-[2.25rem] border border-slate-100/80 shadow-2xl shadow-primary/5 overflow-hidden transition-all duration-300">
+    <div className="flex flex-col h-[600px] bg-white/90 dark:bg-slate-900/90 backdrop-blur-md rounded-[2.25rem] border border-slate-100/80 dark:border-slate-800/80 shadow-2xl shadow-primary/5 overflow-hidden transition-all duration-300">
       {/* Header */}
       <div className="flex items-center justify-between px-6 py-4.5 border-b border-slate-100 bg-gradient-to-r from-primary to-indigo-650">
         <h2 className="text-base font-black text-white flex items-center gap-2.5 tracking-tight">
@@ -135,11 +135,11 @@ export const AIChatBox = () => {
           </div>
         ) : !isAuthenticated ? (
           <div className="flex flex-col items-center justify-center h-full text-center max-w-sm mx-auto animate-in fade-in zoom-in duration-300">
-            <div className="bg-amber-50 p-5 rounded-3xl mb-4 text-amber-500 shadow-inner">
+            <div className="bg-amber-50 dark:bg-amber-950/20 p-5 rounded-3xl mb-4 text-amber-500 shadow-inner">
               <Bot className="h-10 w-10" />
             </div>
-            <p className="font-black text-xl text-slate-800 tracking-tight mb-2">Yêu cầu đăng nhập</p>
-            <p className="text-sm text-slate-500 mb-6 leading-relaxed font-medium">
+            <p className="font-black text-xl text-slate-800 dark:text-slate-100 tracking-tight mb-2">Yêu cầu đăng nhập</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400 mb-6 leading-relaxed font-medium">
               Vui lòng đăng nhập vào tài khoản của bạn để sử dụng tính năng Trợ lý AI và tự động đặt hàng thông minh.
             </p>
             <Link href="/login">
@@ -153,8 +153,8 @@ export const AIChatBox = () => {
             <div className="bg-primary/5 p-5 rounded-3xl mb-4 text-primary animate-pulse">
               <ShoppingCart className="h-10 w-10" />
             </div>
-            <p className="font-black text-lg text-slate-800 tracking-tight">Trò chuyện với AI</p>
-            <p className="text-xs text-slate-400 mt-2 font-medium leading-relaxed">
+            <p className="font-black text-lg text-slate-800 dark:text-slate-100 tracking-tight">Trò chuyện với AI</p>
+            <p className="text-xs text-slate-400 dark:text-slate-400 mt-2 font-medium leading-relaxed">
               Nhập yêu cầu bằng tiếng Việt tự nhiên để tìm giày, nhận gợi ý size hoặc tự động tạo đơn hàng của bạn.
             </p>
           </div>
@@ -165,7 +165,7 @@ export const AIChatBox = () => {
         )}
         {isLoading && (
           <div className="flex gap-2 items-center">
-            <div className="bg-slate-100 border border-slate-200/50 rounded-2xl rounded-tl-none px-4.5 py-3">
+            <div className="bg-slate-100 dark:bg-slate-800 border border-slate-200/50 dark:border-slate-700/50 rounded-2xl rounded-tl-none px-4.5 py-3">
               <div className="flex gap-1.5 items-center">
                 <div className="w-2 h-2 bg-primary/60 rounded-full animate-bounce"></div>
                 <div className="w-2 h-2 bg-primary/60 rounded-full animate-bounce [animation-delay:0.2s]"></div>
@@ -178,7 +178,7 @@ export const AIChatBox = () => {
 
       {/* Input Area */}
       {isAuthenticated && !isCheckingAuth && (
-        <div className="border-t border-slate-100 p-4.5 bg-slate-50/50 backdrop-blur-md">
+        <div className="border-t border-slate-100 dark:border-slate-800 p-4.5 bg-slate-50/50 dark:bg-slate-900/50 backdrop-blur-md">
           <form onSubmit={handleSendMessage} className="flex gap-2.5">
             <Input
               ref={inputRef}
@@ -187,7 +187,7 @@ export const AIChatBox = () => {
               onKeyDown={handleKeyDown}
               placeholder={getPlaceholder()}
               disabled={isLoading}
-              className="flex-1 h-12 px-4 rounded-2xl bg-white border border-slate-200 focus:ring-2 focus:ring-primary focus:border-transparent text-sm font-medium"
+              className="flex-1 h-12 px-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-primary focus:border-transparent text-sm font-medium dark:text-white"
             />
             <Button
               type="submit"
@@ -197,7 +197,7 @@ export const AIChatBox = () => {
               <Send className="w-4.5 h-4.5" />
             </Button>
           </form>
-          <div className="text-[10px] text-slate-400 mt-2.5 flex items-center gap-1.5 font-semibold tracking-wide uppercase px-1">
+          <div className="text-[10px] text-slate-400 dark:text-slate-500 mt-2.5 flex items-center gap-1.5 font-semibold tracking-wide uppercase px-1">
             <Lightbulb className="h-3.5 w-3.5 text-amber-500 fill-amber-500/10" />
             <span>
               Gợi ý: &quot;Tìm giày Adidas màu đen&quot; hoặc &quot;Tạo đơn hàng này&quot;
@@ -220,7 +220,7 @@ const MessageBubble = ({ message }: { message: ChatMessage }) => {
           "max-w-[85%] px-4.5 py-3.5 rounded-2xl shadow-sm text-sm font-medium leading-relaxed transition-all duration-300",
           isUser
             ? "bg-gradient-to-br from-primary to-indigo-600 text-white rounded-tr-none shadow-md shadow-primary/5"
-            : "bg-slate-100 border border-slate-200/40 text-slate-800 rounded-tl-none",
+            : "bg-slate-100 dark:bg-slate-800 border border-slate-200/40 dark:border-slate-700/40 text-slate-800 dark:text-slate-100 rounded-tl-none",
         )}
       >
         <p>{message.content}</p>
@@ -241,7 +241,7 @@ const MessageBubble = ({ message }: { message: ChatMessage }) => {
                       "p-3 rounded-xl transition-all duration-200 flex flex-col gap-1 shadow-sm border",
                       isUser
                         ? "bg-white/10 hover:bg-white/15 border-white/10 text-white"
-                        : "bg-white hover:shadow-md border-slate-100 text-slate-800",
+                        : "bg-white dark:bg-slate-800 hover:shadow-md border-slate-100 dark:border-slate-700 text-slate-800 dark:text-slate-100",
                     )}
                   >
                     <div className="flex justify-between items-start gap-2">
@@ -262,16 +262,16 @@ const MessageBubble = ({ message }: { message: ChatMessage }) => {
 
         {/* Order Created Notification */}
         {message.metadata?.orderCreated && (
-          <div className="mt-4 p-3 bg-emerald-50 border border-emerald-100 text-emerald-800 rounded-xl text-xs font-semibold shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-300">
-            <div className="flex items-center gap-2 font-black uppercase tracking-wider text-emerald-700 mb-1.5">
+          <div className="mt-4 p-3 bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900/50 text-emerald-800 dark:text-emerald-350 rounded-xl text-xs font-semibold shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-300">
+            <div className="flex items-center gap-2 font-black uppercase tracking-wider text-emerald-700 dark:text-emerald-450 mb-1.5">
               <div className="bg-emerald-500 text-white p-1 rounded-lg">
                 <ShoppingCart className="w-3.5 h-3.5" />
               </div>
               <span>Đơn hàng đã được tạo!</span>
             </div>
-            <div className="space-y-1 text-[11px] font-medium text-emerald-600">
-              <p>Mã đơn hàng: <strong className="font-bold text-emerald-800">{message.metadata.orderCreated.orderId}</strong></p>
-              <p>Tổng thanh toán: <strong className="font-bold text-emerald-800">{(message.metadata.orderCreated.totalAmount).toLocaleString("vi-VN")} ₫</strong></p>
+            <div className="space-y-1 text-[11px] font-medium text-emerald-600 dark:text-emerald-400">
+              <p>Mã đơn hàng: <strong className="font-bold text-emerald-800 dark:text-emerald-200">{message.metadata.orderCreated.orderId}</strong></p>
+              <p>Tổng thanh toán: <strong className="font-bold text-emerald-800 dark:text-emerald-200">{(message.metadata.orderCreated.totalAmount).toLocaleString("vi-VN")} ₫</strong></p>
               {message.metadata.orderCreated.orderLink && (
                 <div className="mt-3">
                   <Link href={message.metadata.orderCreated.orderLink}>

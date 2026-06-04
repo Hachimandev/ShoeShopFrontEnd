@@ -132,6 +132,8 @@ export default function OrderDetailPage({
     switch (status) {
       case OrderStatus.PENDING:
         return "bg-amber-100 text-amber-900 border-0";
+      case OrderStatus.PAID:
+        return "bg-teal-100 text-teal-900 border-0";
       case OrderStatus.AWAITING_CANCELLATION:
         return "bg-orange-100 text-orange-900 border-0";
       case OrderStatus.SHIPPING:

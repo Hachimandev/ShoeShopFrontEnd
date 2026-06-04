@@ -120,9 +120,7 @@ export default function CheckoutPage() {
     const subtotal = cart?.totalPrice || 0;
     const fee =
       (cart?.items?.length || 0) > 0
-        ? shippingMethod === "EXPRESS"
-          ? 50000
-          : 30000
+        ? 1000
         : 0;
     const t = subtotal * 0.1;
     return { shippingFee: fee, tax: t, total: subtotal + fee + t };

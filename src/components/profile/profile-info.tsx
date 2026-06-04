@@ -20,7 +20,7 @@ export function ProfileInfo({ userInfo }: ProfileInfoProps) {
 
   return (
     <div className="lg:col-span-2 space-y-6">
-      <Card className="shadow-sm border-slate-200">
+      <Card className="shadow-sm border-slate-200 dark:border-slate-800 dark:bg-slate-900/60">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-6">
           <div>
             <CardTitle className="text-2xl font-bold">
@@ -38,7 +38,7 @@ export function ProfileInfo({ userInfo }: ProfileInfoProps) {
               <p className="text-sm font-medium text-slate-500 uppercase tracking-wider">
                 Full Name
               </p>
-              <p className="text-lg font-semibold text-slate-900">
+              <p className="text-lg font-semibold text-slate-900 dark:text-slate-100">
                 {customer?.fullName || "Not set"}
               </p>
             </div>
@@ -46,68 +46,68 @@ export function ProfileInfo({ userInfo }: ProfileInfoProps) {
               <p className="text-sm font-medium text-slate-500 uppercase tracking-wider">
                 Username
               </p>
-              <p className="text-lg font-semibold text-slate-900">
+              <p className="text-lg font-semibold text-slate-900 dark:text-slate-100">
                 @{userInfo.username}
               </p>
             </div>
           </div>
 
           {/* Contact Info */}
-          <div className="space-y-4 rounded-lg bg-slate-50 p-4">
-            <h3 className="font-semibold text-slate-900">
+          <div className="space-y-4 rounded-lg bg-slate-50 dark:bg-slate-800/50 p-4">
+            <h3 className="font-semibold text-slate-900 dark:text-slate-100">
               Contact Information
             </h3>
             <div className="space-y-3">
               <div className="flex items-start gap-3">
-                <Mail className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                <Mail className="h-5 w-5 text-blue-600 dark:text-blue-450 mt-0.5 flex-shrink-0" />
                 <div>
-                  <p className="text-sm text-slate-600">Email</p>
-                  <p className="font-medium text-slate-900">{userInfo.email}</p>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">Email</p>
+                  <p className="font-medium text-slate-900 dark:text-slate-100">{userInfo.email}</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <Phone className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                <Phone className="h-5 w-5 text-blue-600 dark:text-blue-450 mt-0.5 flex-shrink-0" />
                 <div>
-                  <p className="text-sm text-slate-600">Phone Number</p>
-                  <p className="font-medium text-slate-900">{phone}</p>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">Phone Number</p>
+                  <p className="font-medium text-slate-900 dark:text-slate-100">{phone}</p>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Address Info */}
-          <div className="space-y-4 rounded-lg bg-slate-50 p-4">
-            <h3 className="font-semibold text-slate-900">Shipping Address</h3>
+          <div className="space-y-4 rounded-lg bg-slate-50 dark:bg-slate-800/50 p-4">
+            <h3 className="font-semibold text-slate-900 dark:text-slate-100">Shipping Address</h3>
             <div className="flex items-start gap-3">
-              <MapPin className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+              <MapPin className="h-5 w-5 text-blue-600 dark:text-blue-450 mt-0.5 flex-shrink-0" />
               <div>
-                <p className="text-sm text-slate-600">Address</p>
-                <p className="font-medium text-slate-900">{address}</p>
+                <p className="text-sm text-slate-600 dark:text-slate-400">Address</p>
+                <p className="font-medium text-slate-900 dark:text-slate-100">{address}</p>
               </div>
             </div>
           </div>
 
           {/* Account Info */}
-          <div className="space-y-4 rounded-lg bg-blue-50 p-4 border border-blue-200">
-            <h3 className="font-semibold text-slate-900">
+          <div className="space-y-4 rounded-lg bg-blue-50 dark:bg-blue-950/20 p-4 border border-blue-200 dark:border-blue-900/50">
+            <h3 className="font-semibold text-slate-900 dark:text-slate-100">
               Account Information
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="flex items-start gap-3">
-                <Shield className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                <Shield className="h-5 w-5 text-blue-600 dark:text-blue-450 mt-0.5 flex-shrink-0" />
                 <div>
-                  <p className="text-sm text-slate-600">Account ID</p>
-                  <p className="font-mono text-sm text-slate-900 break-all">
+                  <p className="text-sm text-slate-600 dark:text-slate-400">Account ID</p>
+                  <p className="font-mono text-sm text-slate-900 dark:text-slate-100 break-all">
                     {userInfo.accountId}
                   </p>
                 </div>
               </div>
               {customer?.customerId && (
                 <div className="flex items-start gap-3">
-                  <Shield className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                  <Shield className="h-5 w-5 text-blue-600 dark:text-blue-450 mt-0.5 flex-shrink-0" />
                   <div>
-                    <p className="text-sm text-slate-600">Customer ID</p>
-                    <p className="font-mono text-sm text-slate-900 break-all">
+                    <p className="text-sm text-slate-600 dark:text-slate-400">Customer ID</p>
+                    <p className="font-mono text-sm text-slate-900 dark:text-slate-100 break-all">
                       {customer.customerId}
                     </p>
                   </div>

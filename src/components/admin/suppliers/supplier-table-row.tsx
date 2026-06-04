@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Building2, Eye, Factory, Package, Pencil, Trash2, Truck } from "lucide-react";
+import { Building2, Eye, Factory, Package, Pencil, Truck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Supplier } from "@/types/supplier";
 import { Badge } from "@/components/ui/badge";
@@ -102,16 +102,6 @@ export function SupplierTableRow({
           >
             <Pencil className="h-4 w-4" />
           </Link>
-        </Button>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="text-red-600"
-          disabled={deletingId === supplier.supplierId}
-          onClick={() => onDelete(supplier.supplierId)}
-          aria-label="Xóa"
-        >
-          <Trash2 className="h-4 w-4" />
         </Button>
       </td>
     </tr>

@@ -7,7 +7,7 @@ import Link from "next/link";
 import { ShoppingBag } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-const SHIPPING_COST = 30000;
+const SHIPPING_COST = 1000;
 const TAX_RATE = 0.1;
 
 export function CartSummary() {

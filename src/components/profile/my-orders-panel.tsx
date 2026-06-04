@@ -39,10 +39,10 @@ export function MyOrdersPanel() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900 md:text-3xl">
+        <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white md:text-3xl">
           Đơn hàng của tôi
         </h1>
-        <p className="mt-1 text-sm text-slate-600">
+        <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
           Theo dõi và quản lý đơn hàng theo trạng thái
         </p>
       </div>
@@ -65,7 +65,7 @@ export function MyOrdersPanel() {
         </div>
       )}
 
-      <div className="flex flex-wrap gap-2 border-b border-slate-200 pb-1">
+      <div className="flex flex-wrap gap-2 border-b border-slate-200 dark:border-slate-800 pb-1">
         {TABS.map((t) => (
           <button
             key={t.id}
@@ -74,8 +74,8 @@ export function MyOrdersPanel() {
             className={[
               "relative rounded-t-lg px-4 py-2.5 text-sm font-medium transition-colors",
               activeTab === t.id
-                ? "bg-white text-primary shadow-sm ring-1 ring-slate-200"
-                : "text-slate-600 hover:bg-slate-100 hover:text-slate-900",
+                ? "bg-white dark:bg-slate-900 text-primary shadow-sm ring-1 ring-slate-200 dark:ring-slate-800"
+                : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/80 hover:text-slate-900 dark:hover:text-slate-100",
             ].join(" ")}
           >
             {t.label}
@@ -92,10 +92,10 @@ export function MyOrdersPanel() {
       </div>
 
       {visibleOrders.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-slate-200 bg-slate-50/80 py-16 text-center">
-          <Package className="mb-3 h-14 w-14 text-slate-300" />
-          <p className="font-medium text-slate-700">Chưa có đơn hàng</p>
-          <p className="mt-1 max-w-sm text-sm text-slate-500">
+        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-950/20 py-16 text-center">
+          <Package className="mb-3 h-14 w-14 text-slate-300 dark:text-slate-600" />
+          <p className="font-medium text-slate-700 dark:text-slate-300">Chưa có đơn hàng</p>
+          <p className="mt-1 max-w-sm text-sm text-slate-500 dark:text-slate-400">
             Không có đơn nào ở mục này.
           </p>
         </div>

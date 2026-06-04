@@ -144,7 +144,7 @@ export function EditProfileForm({ username }: EditProfileFormProps) {
         </Link>
       </div>
 
-      <Card className="shadow-sm border-slate-200">
+      <Card className="shadow-sm border-slate-200 dark:border-slate-800 dark:bg-slate-900/60">
         <CardHeader>
           <CardTitle className="text-2xl">Edit Profile</CardTitle>
         </CardHeader>
@@ -152,7 +152,7 @@ export function EditProfileForm({ username }: EditProfileFormProps) {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Basic Info */}
             <div className="space-y-4">
-              <h3 className="font-semibold text-slate-900">
+              <h3 className="font-semibold text-slate-900 dark:text-slate-100">
                 Basic Information
               </h3>
               <div className="grid gap-4 sm:grid-cols-2">
@@ -184,7 +184,7 @@ export function EditProfileForm({ username }: EditProfileFormProps) {
 
             {/* Contact Info */}
             <div className="space-y-4">
-              <h3 className="font-semibold text-slate-900">
+              <h3 className="font-semibold text-slate-900 dark:text-slate-100">
                 Contact Information
               </h3>
               <Field>
@@ -202,7 +202,7 @@ export function EditProfileForm({ username }: EditProfileFormProps) {
 
             {/* Address Info */}
             <div className="space-y-4">
-              <h3 className="font-semibold text-slate-900">Shipping Address</h3>
+              <h3 className="font-semibold text-slate-900 dark:text-slate-100">Shipping Address</h3>
               <Field>
                 <FieldLabel htmlFor="address">Street / House No.</FieldLabel>
                 <Input
@@ -249,17 +249,17 @@ export function EditProfileForm({ username }: EditProfileFormProps) {
 
             {/* Error/Success Messages */}
             {saveError && (
-              <div className="rounded-lg bg-red-50 p-4 text-sm text-red-800">
+              <div className="rounded-lg bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900/30 p-4 text-sm text-red-800 dark:text-red-300">
                 {saveError}
               </div>
             )}
             {error && (
-              <div className="rounded-lg bg-red-50 p-4 text-sm text-red-800">
+              <div className="rounded-lg bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900/30 p-4 text-sm text-red-800 dark:text-red-300">
                 {error}
               </div>
             )}
             {saveSuccess && (
-              <div className="rounded-lg bg-emerald-50 p-4 text-sm text-emerald-800">
+              <div className="rounded-lg bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-900/30 p-4 text-sm text-emerald-800 dark:text-emerald-300">
                 Profile updated successfully! Redirecting...
               </div>
             )}
