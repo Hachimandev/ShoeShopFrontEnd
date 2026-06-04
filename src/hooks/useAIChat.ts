@@ -5,6 +5,7 @@ import { ChatMessage } from "@/types/ai-chat";
 import { aiChatService } from "@/services/ai-chat.service";
 import { customerService } from "@/services/customer.service";
 import { toast } from "sonner";
+import { handleApiError } from "@/lib/error-handler";
 
 export const useAIChat = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -214,9 +215,10 @@ export const useAIChat = () => {
         }
 
         scrollToBottom();
-      } catch (error) {
+      } catch (error: unknown) {
         console.error("Error sending message:", error);
-        toast.error("Không gửi được tin nhắn. Vui lòng thử lại.");
+        const msg = handleApiError(error, "Không gửi được tin nhắn. Vui lòng thử lại.");
+        toast.error(msg);
       } finally {
         setIsLoading(false);
       }

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { handleApiError } from "@/lib/error-handler";
 import Link from "next/link";
 import { KeyRound, Mail, CheckCircle2, ShieldAlert, ArrowLeft, Loader2, Star, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -48,10 +49,8 @@ export default function ForgotPasswordPage() {
       await authService.forgotPasswordSendOtp(email);
       setCountdown(60);
       setStep(2);
-    } catch (err: any) {
-      setError(
-        err.response?.data || "Không thể gửi OTP. Vui lòng kiểm tra lại email."
-      );
+    } catch (err: unknown) {
+      setError(handleApiError(err, "Không thể gửi OTP. Vui lòng kiểm tra lại email."));
     } finally {
       setLoading(false);
     }
@@ -63,10 +62,8 @@ export default function ForgotPasswordPage() {
     try {
       await authService.forgotPasswordSendOtp(email);
       setCountdown(60);
-    } catch (err: any) {
-      setError(
-        err.response?.data || "Không thể gửi lại OTP. Vui lòng thử lại."
-      );
+    } catch (err: unknown) {
+      setError(handleApiError(err, "Không thể gửi lại OTP. Vui lòng thử lại."));
     } finally {
       setLoading(false);
     }
@@ -79,8 +76,8 @@ export default function ForgotPasswordPage() {
     try {
       await authService.forgotPasswordVerifyOtp(email, otp);
       setStep(3);
-    } catch (err: any) {
-      setError(err.response?.data || "Mã OTP không hợp lệ hoặc đã hết hạn.");
+    } catch (err: unknown) {
+      setError(handleApiError(err, "Mã OTP không hợp lệ hoặc đã hết hạn."));
     } finally {
       setLoading(false);
     }
@@ -112,8 +109,8 @@ export default function ForgotPasswordPage() {
       setTimeout(() => {
         router.push("/auth/login");
       }, 3000);
-    } catch (err: any) {
-      setError(err.response?.data || "Đặt lại mật khẩu thất bại. Vui lòng thử lại.");
+    } catch (err: unknown) {
+      setError(handleApiError(err, "Đặt lại mật khẩu thất bại. Vui lòng thử lại."));
     } finally {
       setLoading(false);
     }
