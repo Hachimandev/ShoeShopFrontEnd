@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
 import { customerService } from "@/services/customer.service";
 import { orderService } from "@/services/order.service";
+import { handleApiError } from "@/lib/error-handler";
 
 const STORAGE_KEY = "checkoutCustomerInfo";
 
@@ -210,12 +211,9 @@ export default function CheckoutPage() {
           }
         }, 1600);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Lỗi Checkout:", error);
-      const serverMessage = error?.response?.data?.message;
-      setCheckoutError(
-        serverMessage || "Thanh toán thất bại. Vui lòng kiểm tra lại kết nối.",
-      );
+      setCheckoutError(handleApiError(error, "Thanh toán thất bại. Vui lòng kiểm tra lại kết nối."));
     } finally {
       setCheckoutLoading(false);
     }

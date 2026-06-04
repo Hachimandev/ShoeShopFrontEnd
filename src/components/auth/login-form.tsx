@@ -1,5 +1,7 @@
 "use client";
 import { cn } from "@/lib/utils";
+import { handleApiError } from "@/lib/error-handler";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -38,14 +40,7 @@ export function LoginForm({
       await authService.login({ username, password });
       router.push(redirect || "/"); // Chuyển hướng sau khi đăng nhập thành công
     } catch (err: unknown) {
-      if (err && typeof err === "object" && "response" in err) {
-        const response = (err as { response?: { data?: string } }).response;
-        setError(
-          response?.data || "Đăng nhập thất bại. Vui lòng kiểm tra lại.",
-        );
-      } else {
-        setError("Có lỗi xảy ra. Vui lòng thử lại.");
-      }
+      setError(handleApiError(err, "Đăng nhập thất bại. Vui lòng kiểm tra lại."));
     } finally {
       setLoading(false);
     }
@@ -173,4 +168,6 @@ export function LoginForm({
       </FieldDescription>
     </div>
   );
+
 }
+

@@ -1,5 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
+import { handleApiError } from "@/lib/error-handler";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -107,8 +108,8 @@ export function RegisterForm({
       setSuccess("Mã OTP đã được gửi đến email của bạn.");
       setStep(2);
       setOtp("");
-    } catch (err: any) {
-      setError(err?.response?.data || "Không thể gửi OTP. Vui lòng thử lại.");
+    } catch (err: unknown) {
+      setError(handleApiError(err, "Không thể gửi OTP. Vui lòng thử lại."));
     } finally {
       setLoading(false);
     }
@@ -127,8 +128,8 @@ export function RegisterForm({
       await authService.verifyOtp(email, otp);
       setSuccess("Xác thực email thành công! Vui lòng điền thông tin đăng ký.");
       setStep(3);
-    } catch (err: any) {
-      setError(err?.response?.data || "Mã OTP không đúng hoặc đã hết hạn.");
+    } catch (err: unknown) {
+      setError(handleApiError(err, "Mã OTP không đúng hoặc đã hết hạn."));
     } finally {
       setLoading(false);
     }
@@ -172,8 +173,8 @@ export function RegisterForm({
       } else {
         setError(response);
       }
-    } catch (err: any) {
-      setError(err?.response?.data || "Đăng ký thất bại. Vui lòng thử lại.");
+    } catch (err: unknown) {
+      setError(handleApiError(err, "Đăng ký thất bại. Vui lòng thử lại."));
     } finally {
       setLoading(false);
     }
