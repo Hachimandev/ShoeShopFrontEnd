@@ -75,6 +75,10 @@ export const AIChatBox = () => {
         return "Nhập số điện thoại của bạn...";
       }
       return "Nhập thông tin giao hàng...";
+    } else if (lastStep === "ASKING_FOR_SIZE") {
+      return "Nhập size giày bạn muốn đặt (ví dụ: 42)...";
+    } else if (lastStep === "ASKING_FOR_COLOR") {
+      return "Nhập màu sắc bạn muốn đặt (ví dụ: Đen)...";
     } else if (lastStep === "ASKING_FOR_CONFIRMATION") {
       return "Xác nhận đặt hàng (gõ 'có' hoặc 'không')...";
     }
@@ -273,12 +277,27 @@ const MessageBubble = ({ message }: { message: ChatMessage }) => {
               <p>Mã đơn hàng: <strong className="font-bold text-emerald-800 dark:text-emerald-200">{message.metadata.orderCreated.orderId}</strong></p>
               <p>Tổng thanh toán: <strong className="font-bold text-emerald-800 dark:text-emerald-200">{(message.metadata.orderCreated.totalAmount).toLocaleString("vi-VN")} ₫</strong></p>
               {message.metadata.orderCreated.orderLink && (
-                <div className="mt-3">
-                  <Link href={message.metadata.orderCreated.orderLink}>
-                    <Button size="sm" className="w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl py-1 text-xs font-bold transition-all duration-200">
-                      {message.metadata.orderCreated.orderLink.includes("/payment") ? "Thanh toán qua SePay ngay" : "Xem đơn hàng"}
-                    </Button>
-                  </Link>
+                <div className="mt-3 flex flex-col gap-2">
+                  {message.metadata.orderCreated.orderLink.includes("/payment") ? (
+                    <>
+                      <Link href={message.metadata.orderCreated.orderLink}>
+                        <Button size="sm" className="w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl py-1 text-xs font-bold transition-all duration-200">
+                          Thanh toán qua SePay ngay
+                        </Button>
+                      </Link>
+                      <Link href={`/profile/orders/${message.metadata.orderCreated.orderId}`}>
+                        <Button size="sm" variant="outline" className="w-full border-emerald-650 hover:bg-emerald-50/50 dark:hover:bg-slate-800 text-emerald-700 dark:text-emerald-400 rounded-xl py-1 text-xs font-bold transition-all duration-200">
+                          Xem chi tiết đơn hàng
+                        </Button>
+                      </Link>
+                    </>
+                  ) : (
+                    <Link href={message.metadata.orderCreated.orderLink}>
+                      <Button size="sm" className="w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl py-1 text-xs font-bold transition-all duration-200">
+                        Xem đơn hàng
+                      </Button>
+                    </Link>
+                  )}
                 </div>
               )}
             </div>
