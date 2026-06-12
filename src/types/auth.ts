@@ -6,8 +6,12 @@ export interface AuthRequest {
 export interface AuthResponse {
   token: string;
   username: string;
-  accountId: string;
+  accountId?: string;
   roles: string[];
+}
+
+export interface GoogleLoginRequest {
+  idToken: string;
 }
 
 export interface RegisterRequest {
