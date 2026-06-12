@@ -12,12 +12,38 @@ import {
   FieldSeparator,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { authService } from "@/services/auth.service";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
+import Script from "next/script";
+
+declare global {
+  interface Window {
+    google?: {
+      accounts: {
+        id: {
+          initialize: (config: {
+            client_id: string;
+            callback: (response: { credential?: string }) => void;
+          }) => void;
+          renderButton: (
+            parent: HTMLElement,
+            options: {
+              theme?: "outline" | "filled_blue" | "filled_black";
+              size?: "large" | "medium" | "small";
+              width?: number;
+              text?: "signin_with" | "signup_with" | "continue_with" | "signin";
+              shape?: "rectangular" | "pill" | "circle" | "square";
+            },
+          ) => void;
+        };
+      };
+    };
+  }
+}
 
 export function LoginForm({
   className,
@@ -27,10 +53,13 @@ export function LoginForm({
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const googleButtonRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect");
+  const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,11 +75,60 @@ export function LoginForm({
     }
   };
 
+  const handleGoogleCredential = useCallback(
+    async (credential?: string) => {
+      if (!credential) {
+        setError("Google did not return a sign-in token.");
+        return;
+      }
+
+      setError("");
+      setGoogleLoading(true);
+      try {
+        await authService.loginWithGoogle({ idToken: credential });
+        router.push(redirect || "/");
+      } catch (err: unknown) {
+        setError(handleApiError(err, "Google login failed. Please try again."));
+      } finally {
+        setGoogleLoading(false);
+      }
+    },
+    [redirect, router],
+  );
+
+  const initializeGoogleButton = useCallback(() => {
+    if (!googleClientId || !window.google || !googleButtonRef.current) return;
+
+    googleButtonRef.current.innerHTML = "";
+    window.google.accounts.id.initialize({
+      client_id: googleClientId,
+      callback: (response) => handleGoogleCredential(response.credential),
+    });
+    window.google.accounts.id.renderButton(googleButtonRef.current, {
+      theme: "outline",
+      size: "large",
+      width: 320,
+      text: "continue_with",
+      shape: "rectangular",
+    });
+  }, [googleClientId, handleGoogleCredential]);
+
+  useEffect(() => {
+    initializeGoogleButton();
+  }, [initializeGoogleButton]);
+
   return (
     <div
       className={cn("flex flex-col gap-4 max-w-5xl mx-auto w-full", className)}
       {...props}
     >
+      {googleClientId && (
+        <Script
+          src="https://accounts.google.com/gsi/client"
+          strategy="afterInteractive"
+          onLoad={initializeGoogleButton}
+        />
+      )}
       <Card className="overflow-hidden p-0 shadow-lg">
         <CardContent className="grid p-0 md:grid-cols-2">
           <form className="p-6 md:p-8 space-y-4" onSubmit={handleSubmit}>
@@ -65,6 +143,19 @@ export function LoginForm({
               </div>
               {error && (
                 <p className="text-red-500 text-sm text-center">{error}</p>
+              )}
+              {googleClientId && (
+                <>
+                  <div className="flex justify-center min-h-10">
+                    <div
+                      ref={googleButtonRef}
+                      className={cn(
+                        googleLoading && "pointer-events-none opacity-70",
+                      )}
+                    />
+                  </div>
+                  <FieldSeparator>or</FieldSeparator>
+                </>
               )}
               <Field className="space-y-1">
                 <FieldLabel htmlFor="username" className="text-sm font-medium">

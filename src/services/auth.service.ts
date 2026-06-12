@@ -3,10 +3,44 @@ import {
   AuthRequest,
   AuthResponse,
   ChangePasswordRequest,
+  GoogleLoginRequest,
   RegisterRequest,
   UpdateAccountRequest,
   UserInfo,
 } from "@/types/auth";
+
+async function persistAuthSession(auth: AuthResponse) {
+  localStorage.setItem("token", auth.token);
+  localStorage.setItem("username", auth.username);
+  localStorage.setItem("roles", JSON.stringify(auth.roles));
+
+  const user = {
+    accountId: auth.accountId,
+    username: auth.username,
+    fullName: auth.username,
+    role: auth.roles && auth.roles.length > 0 ? auth.roles[0] : "USER",
+  };
+  localStorage.setItem("user", JSON.stringify(user));
+
+  try {
+    const customerResponse = await api.get(`/customers/${auth.username}`);
+    if (customerResponse.data) {
+      const fullUserData = {
+        ...user,
+        customerId: customerResponse.data.customerId,
+        fullName: customerResponse.data.fullName || user.fullName,
+        email: customerResponse.data.email,
+        phoneNumber: customerResponse.data.phoneNumber,
+        address: customerResponse.data.address,
+      };
+      localStorage.setItem("user", JSON.stringify(fullUserData));
+    }
+  } catch (err) {
+    console.error("Failed to fetch customer info on login:", err);
+  }
+
+  window.dispatchEvent(new Event("auth-change"));
+}
 
 export const authService = {
   login: async (data: AuthRequest): Promise<AuthResponse> => {
@@ -50,6 +84,14 @@ export const authService = {
 
       // Phát sự kiện để Header cập nhật ngay lập tức
       window.dispatchEvent(new Event("auth-change"));
+    }
+    return response.data;
+  },
+
+  loginWithGoogle: async (data: GoogleLoginRequest): Promise<AuthResponse> => {
+    const response = await api.post<AuthResponse>("/auth/login-google", data);
+    if (response.data.token) {
+      await persistAuthSession(response.data);
     }
     return response.data;
   },
