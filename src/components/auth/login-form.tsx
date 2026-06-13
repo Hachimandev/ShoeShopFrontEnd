@@ -59,7 +59,7 @@ export function LoginForm({
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect");
-  const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "586282939098-61fm5vqcb51lc312l502b7j8t7oukiv8.apps.googleusercontent.com";
+  const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
